@@ -23,7 +23,7 @@
     </InstructionScreen>
 
     <!-- the practice phase -->
-    <template v-for="(trial, i) in practiceData">
+    <!--template v-for="(trial, i) in practiceData">
       <MyMultipleChoiceScreen
         :feedbackTime="-1"
         :key="i"
@@ -91,9 +91,9 @@
       <br />
       <br />
       Press the button below to continue...
-    </InstructionScreen>
+    </InstructionScreen-->
     <!-- the test phase -->
-    <!--template v-for="(trial, i) in trialData">
+    <template v-for="(trial, i) in trialData">
       <MyMultipleChoiceScreen
         :key="i"
         question="Choose one sentence that accurately describe the situation:"
@@ -138,13 +138,13 @@
           </button>
             <Record :data="trial" />  
         </template>
-      </MyMultipleChoiceScreen-->
+      </MyMultipleChoiceScreen>
       <!--Screen>
         <p>Do you prefer other discriptions?</p>
         <TextareaInput :response.sync="$magpie.measurements.response" />
         <button @click="$magpie.saveAndNextScreen();">Next</button> 
-      </Screen>
-    </template-->
+      </Screen-->
+    </template>
     <PostTestScreen />
 
     <!-- While developing your experiment, using the DebugResults screen is fine,
@@ -155,42 +155,60 @@
 
 <script>
 // Load data from csv files as javascript arrays with objects
-import trialData from '../trials/training_trials.csv';
+import trialsAll from '../trials/training_trials.csv';
 import practiceData from '../trials/practice_trials.csv'
 //import trialData from '../trials/trials.csv';
 import _ from 'lodash'
 import MyMultipleChoiceScreen from './MyMultipleChoiceScreen';
 
 
-var template_if = "If Ball A passes the block, Ball E will pass the gate.";
-var template_because = "Ball E passed the gate because Ball A passed the block.";
+var opt = {'if':_.template('If Ball A passes the <%= block_gate %>, Ball E will pass the gate.'),
+'because':_.template('Ball E passed the gate because Ball A passed the <%= block_gate %>.')};
 
 
-var genTrials = function(data) {
-      // groupby condition
-      // _.chain(data)
-      //.filter("exp" == "main")
-      //.groupby(data, )
-      //.map((value, key) => ({ condition: key, trial: value }))
-      //.value()
-      // map sample 2 into the group
-      // shuffle the final data
-      /*
-      var makeMainTrials = function() {
-  return(_.shuffle(_.map(conditions, function(c) {
-  var matchingTrials = _.filter(imaze_trials, function(t) {
-    return(t.condition == c.condition && t.suite == c.suite)
-  })
-  console.log(result);
-  return(_.shuffle(matchingTrials)[0])
-  
-})))}
-*/
-      return data;
-}
+var genTrials = function(data, exp, size) {
+ // for each condition, sample exp trials with size 
+  var sample = _.chain(data)
+      .groupBy('structure')
+      .map(function(trials,struct) {
+        return _.sampleSize(trials,size);
+      })
+      .flatten()
+      .value();
+ // get forced choice questions 
+ var gen_opt = _.map(sample, function(t) {
+    if(_.startsWith(t.structure,'common')) {
+      t.option1 = opt[exp]({'block_gate': _.startsWith(t.pos,'Aright')?'block':'gate'});
+      t.option2 = _.replace(opt[exp]({'block_gate': _.startsWith(t.pos,'Aright')?'gate':'block'}),'A','B');
+    }
+    else {
+      t.option1 = opt[exp]({'block_gate': 'block'});
+      t.option2 = _.replace(opt[exp]({'block_gate': 'block'}),'A','B');
+    }
+    t.exp = exp;
+    return t;
+ });
+ return _.shuffle(gen_opt);
+};
 
-//var trialData = genTrials();
+var myConcat = function(d) {
+  var copyd = _.cloneDeep(d);
+  var a = genTrials(d,'if',2);
+  var b = genTrials(copyd,'because',2);
 
+  var all =  _.shuffle(_.concat(a,b));
+  var control = _.shuffle(_.remove(all,['structure','single']));
+
+  var idx = [4, 9, 14, 19];
+  for(var i=0; i<idx.length; i++) {
+    var t = idx[i];
+    all = _.concat(_.slice(all,0,t), control[i], _.slice(all,t,all.length));
+  }
+  //console.log(_.filter(all,['exp','if']));
+  // todo: avoid same cond together
+  return all;
+};
+var trialData = myConcat(trialsAll);
 
 export default {
   name: 'App',
@@ -200,50 +218,22 @@ export default {
   data() {
     return {
       //trialData
-      //trialData: genTrials(trialData),
+      trialData: trialData,
+      trialsAll: trialsAll,
+      //trialData: genTrials(trialsAll,'if'),
       //trialData: _.shuffle(trialData),
-     practiceData
+    //practiceData
     };
   },
   methods: {
-    
-    /*
-    genQuestions: function (structure, pos, exp="if", question = "A") {
-      var template = (exp == "if" ? template_if : template_because);
-      // search for A/B and switch 
-      if(question == "B") {
-        //search for A in the string and set it to B
-      }
-      //if structure contains "common" and pos contains Aleft
-      // swap op1, op2; then change A/B
-
-      
-    },
-    */
+    genTrials: genTrials,
+    myConcat: myConcat,
     startScene: function (structure, block1, block2, time, pos, pA, pB) {
-      //console.log('huhu haha');
       var physics_world = document.getElementById(
         'physics-world-iframe'
       ).contentWindow;
-      //document.getElementById('simulate').prop('disabled',true);
       physics_world.Start(structure, block1, block2, time, pos, pA, pB);
-      //document.getElementById('simulate').prop('disabled',false);
-    }
-  },
-  /*
-  getQuestions: function (exp, structure, pos) {
-    if(exp == 'main' && structure!='common_single') {
-      return ['If Ball A get through the block, Ball E will pass the gate.', 'If Ball B get through the block, Ball E will pass the gate.'];
-    }
-    else if(exp == 'filler') {
-      return ['Ball E passed the gate because Ball A passed the block.', 'Ball E passed the gate because Ball B passed the block.'];
-    }
-    else {
-      var gateball = (pos.includes('Aleft')) ? 'A' : 'B';
-      var blockball = (pos.includes('Aleft')) ? 'B' : 'A';
-      return ['If Ball $(gateball) pass the gate, Ball E will pass the gate.', 'If Ball $(blockball) get through the block, Ball E will pass the gate.'];      
     }
   }
-  */
 };
 </script>
