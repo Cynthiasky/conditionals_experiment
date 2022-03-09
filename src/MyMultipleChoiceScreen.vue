@@ -1,44 +1,86 @@
 
 <template>
-  <!-- pass down props -->
-  <LifecycleScreen v-bind="$props">
-    <!-- pass down slots -->
-    <template slot="fixation">
-      <slot name="fixation"></slot>
-    </template>
-    <template slot="stimulus">
-      <slot name="stimulus"></slot>
+  <Screen :progress="progress">
+    <Slide>
+    <template>
+      <Record :data="trial" />
+      <iframe
+        id="physics-world-iframe"
+        src="physics_world.html"
+        width="400"
+        height="300"
+      ></iframe>
+      <div id="simulation_text" style="text-align: center;" v-if="trial.exp=='because'||trial.exp=='video'">
+        <p>Please press 'Watch' to view the rest of the clip.</p>
+      </div>
+      <Wait :time="800" @done="startScene(
+            (structure = trial.structure),
+            (block1 = trial.block1),
+            (block2 = trial.block2),
+            (time = 18),
+            (pos = trial.pos),
+            (pA = trial.pA),
+            (pB = trial.pB)
+        )" />
+      <button
+        v-if="trial.exp=='because'||trial.exp=='video'"
+        id="simulate"
+        type="button"
+        class="next"
+        @click="
+          startScene(
+            (structure = trial.structure),
+            (block1 = trial.block1),
+            (block2 = trial.block2),
+            (time = trial.time),
+            (pos = trial.pos),
+            (pA = trial.pA),
+            (pB = trial.pB)
+          );resetClicked(trial.exp,true);"
+      >
+        Watch
+      </button>
     </template>
 
-    <template #task>
+    <template>
       <Record
         :data="{
-          question,
-          options
+          question
         }"
       />
+      <div v-if="trial.exp=='if' || trial.exp=='picture' || videoWatched">
       <p v-if="question" v-text="question"></p>
       <MultipleChoiceInput
+        v-if="!showFeedback"
         :options="options"
-        :orientation="orientation"
         :response.sync="$magpie.measurements.response"
         @update:response="nextAfterResponse"
       />
-      <button
-        v-if="
+      </div>
+      <div v-if="
+          (trial.exp=='if' || trial.exp=='picture' || videoWatched) &&
           $magpie.measurements.response &&
           (!$magpie.validateMeasurements.response ||
           !$magpie.validateMeasurements.response.$invalid)
-        "
-        @click="$magpie.saveAndNextScreen()"
-      >
+        ">
+        <div v-if="trial.exp != 'picture' && trial.exp != 'video'">
+        <p>(Optional) Do you prefer other discriptions?</p>
+        <TextareaInput :response.sync="$magpie.measurements.comments" />
+        </div>
+
+    <div v-if="(trial.exp=='video' || trial.exp=='picture')&&showFeedback">
+        <p v-if="$magpie.measurements.response == trial.answer">Correct!</p>
+        <p v-else>You chose the wrong answer.</p>
+        <button @click="resetFeedback(trial.exp,false);resetClicked(trial.exp,false);">Ok</button>
+    </div>
+        <button v-if="!showFeedback" @click="$magpie.saveMeasurements();resetFeedback(trial.exp,true);resetClicked(trial.exp,false);"
+        >
         Next
-      </button>
+        </button>
+      </div>
     </template>
-    <template #feedback>
-      <slot name="feedback"></slot>
-    </template>
-  </LifecycleScreen>
+    </Slide>
+  </Screen>
 </template>
 
 <script>
@@ -50,26 +92,55 @@
 export default {
   name: 'MyMultipleChoiceScreen',
   props: {
-    /**
-     * A question
-     */
+    
     question: {
       type: String,
       required: true
     },
-    /**
-     * The possible options to choose from
-     */
+    
     options: {
       type: Array,
       required: true
     },
-    /**
-     * Whether to display 'vertical' or 'horizontal'
-     */
-    orientation: {
-      type: String,
-      default: 'vertical'
+
+    trial: {
+      type: Object,
+      required: true
+    },
+
+    progress: {
+      type: Number,
+      default: undefined
+    },
+  },
+  data() {
+    return {
+      videoWatched: false,
+      showFeedback: false
+    };
+  },
+  methods: {
+    startScene: function (structure, block1, block2, time, pos, pA, pB) {
+      var physics_world = document.getElementById(
+        'physics-world-iframe'
+      ).contentWindow;
+      physics_world.Start(structure, block1, block2, time, pos, pA, pB);
+    },
+    resetClicked: function (exp, clicked=false) {
+      if(exp == 'video' && this.showFeedback) {
+        this.videoWatched = true;
+      }
+      else {
+        this.videoWatched = clicked;
+        if(!this.showFeedback && !clicked) {
+          $magpie.nextScreen();
+        }
+      }
+    },
+    resetFeedback: function (exp, show=false) {
+      if(exp=='video' || exp=='picture') {
+        this.showFeedback = show;
+      }
     }
   }
 };
