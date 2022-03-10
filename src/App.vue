@@ -23,7 +23,7 @@
       <br />
       <br />  
       <div style="text-align: center;">
-      <img src="static/images/instruction.png" />
+      <img src="./static/images/instruction.png" />
       </div>
       <br />
       In this example, both <span style='color:#3EA333;font-weight:bold'>Ball A</span> and <span style='color:#2662E0;font-weight:bold'>Ball B</span> are initially moving. 
