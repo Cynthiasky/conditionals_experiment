@@ -89,7 +89,7 @@
     <PostTestScreen />
     <!-- While developing your experiment, using the DebugResults screen is fine,
       once you're going live, you can use the <SubmitResults> screen to automatically send your experimental data to the server. -->
-    <SubmitResults>
+    <SubmitResultsScreen />
     <DebugResultsScreen />
   </Experiment>
 </template>
