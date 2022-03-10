@@ -20,7 +20,8 @@ module.exports = {
     stylelint: {}
   },
   publicPath:
-    process.env.NODE_ENV === 'production'
-      ? '/' + require('./package.json').name + '/'
-      : '/'
+    //process.env.NODE_ENV === 'production'
+    //  ? '/' + require('./package.json').name + '/'
+    //  : '/'
+    '/'
 };
