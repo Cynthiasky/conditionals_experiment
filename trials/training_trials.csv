@@ -1,4 +1,4 @@
-exp,structure,block1,block2,time,pos,pA,pB,option1,option2
+condition,structure,block1,block2,time,pos,pA,pB,option1,option2
 if,common_single,,false,300,Aleft_Ebottom,,0.2
 if,common_single,,false,300,Aleft_Etop,,0.8
 if,common_single,false,,300,Aright_Ebottom,0.8,

@@ -10,7 +10,7 @@
         width="400"
         height="300"
       ></iframe>
-      <div id="simulation_text" style="text-align: center;" v-if="trial.exp=='because'||trial.exp=='video'">
+      <div id="simulation_text" style="text-align: center;" v-if="trial.condition=='because'||trial.condition=='video'">
         <p>Please press 'Watch' to view the rest of the clip.</p>
       </div>
       <Wait :time="800" @done="startScene(
@@ -23,7 +23,7 @@
             (pB = trial.pB)
         )" />
       <button
-        v-if="trial.exp=='because'||trial.exp=='video'"
+        v-if="trial.condition=='because'||trial.condition=='video'"
         id="simulate"
         type="button"
         class="next"
@@ -36,7 +36,7 @@
             (pos = trial.pos),
             (pA = trial.pA),
             (pB = trial.pB)
-          );resetClicked(trial.exp,true);"
+          );resetClicked(trial.condition,true);"
       >
         Watch
       </button>
@@ -48,8 +48,8 @@
           question
         }"
       />
-      <div v-if="trial.exp=='if' || trial.exp=='picture' || videoWatched">
-      <p v-if="question" v-text="question"></p>
+      <div v-if="trial.condition=='if' || trial.condition=='picture' || videoWatched">
+      <p v-if="question && !showFeedback" v-text="question"></p>
       <MultipleChoiceInput
         v-if="!showFeedback"
         :options="options"
@@ -58,22 +58,22 @@
       />
       </div>
       <div v-if="
-          (trial.exp=='if' || trial.exp=='picture' || videoWatched) &&
+          (trial.condition=='if' || trial.condition=='picture' || videoWatched) &&
           $magpie.measurements.response &&
           (!$magpie.validateMeasurements.response ||
           !$magpie.validateMeasurements.response.$invalid)
         ">
-        <div v-if="trial.exp != 'picture' && trial.exp != 'video'">
+        <div v-if="trial.condition != 'picture' && trial.condition != 'video'">
         <p>(Optional) Do you prefer other discriptions?</p>
         <TextareaInput :response.sync="$magpie.measurements.comments" />
         </div>
 
-    <div v-if="(trial.exp=='video' || trial.exp=='picture')&&showFeedback">
+    <div v-if="(trial.condition=='video' || trial.condition=='picture')&&showFeedback">
         <p v-if="$magpie.measurements.response == trial.answer">Correct!</p>
-        <p v-else>You chose the wrong answer.</p>
-        <button @click="resetFeedback(trial.exp,false);resetClicked(trial.exp,false);">Ok</button>
+        <p v-else >{{ trial.feedback }}</p>
+        <button @click="resetFeedback(trial.condition,false);resetClicked(trial.condition,false);">Ok</button>
     </div>
-        <button v-if="!showFeedback" @click="$magpie.saveMeasurements();resetFeedback(trial.exp,true);resetClicked(trial.exp,false);"
+        <button v-if="!showFeedback" @click="$magpie.saveMeasurements();resetFeedback(trial.condition,true);resetClicked(trial.condition,false);"
         >
         Next
         </button>
@@ -126,8 +126,8 @@ export default {
       ).contentWindow;
       physics_world.Start(structure, block1, block2, time, pos, pA, pB);
     },
-    resetClicked: function (exp, clicked=false) {
-      if(exp == 'video' && this.showFeedback) {
+    resetClicked: function (cond, clicked=false) {
+      if(cond == 'video' && this.showFeedback) {
         this.videoWatched = true;
       }
       else {
@@ -137,8 +137,8 @@ export default {
         }
       }
     },
-    resetFeedback: function (exp, show=false) {
-      if(exp=='video' || exp=='picture') {
+    resetFeedback: function (cond, show=false) {
+      if(cond=='video' || cond=='picture') {
         this.showFeedback = show;
       }
     }

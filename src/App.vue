@@ -1,7 +1,7 @@
 <template>
   <Experiment title="magpie demo">
     <InstructionScreen :title="'Welcome'">
-      Thank you for participatiing this experiment! 
+      Thank you for participating this experiment! 
       <br />
       <br />
       The experiment will take less than 10 minutes. You will see pictures or video clips of three billiard balls. 
@@ -16,7 +16,7 @@
       <span style='color:#2662E0;font-weight:bold'>Ball B</span> and <b>Ball E</b>. Also, there are one or two red motion blocks.
       <br />
       <br />
-      There will be an arrow below the initial moving ball(s). The light red block has a 20% chance to blocking a ball, while the dark red block has an 80% chance. 
+      There will be an arrow below the initially moving ball(s). The light red block has a 20% chance to blocking a ball, while the dark red block has an 80% chance. 
       <br />
       <br />        
       For example, you may see a situation like this: 
@@ -26,10 +26,24 @@
       <img src="static/images/instruction.png" />
       </div>
       <br />
-      In this example, both Ball A and Ball B are initially moving. The darker red block is on the way of Ball A, so Ball A is more likely to be blocked than Ball B.
+      In this example, both <span style='color:#3EA333;font-weight:bold'>Ball A</span> and <span style='color:#2662E0;font-weight:bold'>Ball B</span> are initially moving. 
+      The darker red block is on the way of <span style='color:#3EA333;font-weight:bold'>Ball A</span>, 
+      so <span style='color:#3EA333;font-weight:bold'>Ball A</span> is more likely to be blocked than <span style='color:#2662E0;font-weight:bold'>Ball B</span>.
       <br />
       <br />
-      Press the button below to practice with some examples...
+      Press the button below to continue...
+    </InstructionScreen>
+
+    <InstructionScreen :title="'Practice'">
+      Let's see some examples to get familar with the information before!
+      <br />
+      <br />
+      In this section, you will see some pictures or video clips. You have to choose the correct answer from two options for each situation. There is only one correct answer. 
+      <br />
+      Then, you will have a feedback about your choice (correct or the reason of wrong). 
+      <br />
+      <br />
+      Press the button to start...
     </InstructionScreen>
 
     <!-- the practice phase -->
@@ -42,21 +56,26 @@
       </MyMultipleChoiceScreen>
     </template>
 
-    <InstructionScreen :title="'Instructions'">
-      Congratuations! Now you can continue with the rest of the experiment.
+    <InstructionScreen :title="'Experiment'">
+      Congratuations! Now you can continue with the main part of the experiment.
+      <br />
+      <br />
+      In this section, you will see some pictures or video clips. You have to choose one of the two options that you think is the better discription of the situation. There is no correct or wrong answer, and you will not receive feedback after your choice. 
+      <br />
+      You will see an optional text box after your choice, and you can freely write a better description that is not given in the options.
       <br />
       <br />
       Please note: 
       <br />
       The positions of the blocks and balls can vary accross clips or pictures. 
       <br />
-      Also, the questions will be different with the examples before. Please read the questions carefully. 
+      Also, the questions will be different with the examples before. The questions may change for different situations. So please read each question carefully and think over your preference. 
       <br />
       <br />
       Good luck!
       <br />
       <br />
-      Press the button below to continue...
+      Press the button below to start...
     </InstructionScreen>
     <!-- the test phase -->
     <template v-for="(trial, i) in trialData">
@@ -138,11 +157,10 @@ export default {
   },
   data() {
     return {
-      //trialData
       trialData: trialData,
       trialsAll: trialsAll,
       //trialData: _.shuffle(trialData),
-      practiceData
+      practiceData: practiceData
     };
   },
   methods: {
