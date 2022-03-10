@@ -428,7 +428,7 @@ function createArrow(w, h, x, y, linx, liny, type, userData, img){
     if ((position == "Abottom") || (position.includes("Aleft"))){
     //if (position == "Abottom" || position == "Aleft"){
     //if (position == "Abottom"){
-      console.log('block switch');
+      //console.log('block switch');
       hack = [19,20,14,15];
       hack2 = [21,16];
     }else{
@@ -483,7 +483,7 @@ function createArrow(w, h, x, y, linx, liny, type, userData, img){
   // single causation
   else if (clip == 4) {
     new_pos = position.split("_");
-    console.log('pos_arr', new_pos);
+    //console.log('pos_arr', new_pos);
     // Etop is default for this condition
     if(new_pos[1] == 'Ebottom') {
       objectPositions[clip][9] = 4;
@@ -502,7 +502,7 @@ function createArrow(w, h, x, y, linx, liny, type, userData, img){
   // common causation
   else if(clip == 2 || clip == 5) {
     new_pos = position.split("_");
-    console.log('pos_arr', new_pos);
+    //console.log('pos_arr', new_pos);
     if(new_pos[1] == 'Etop') {
       objectPositions[clip][5] = objectPositions[clip][5]+0.6;
       objectPositions[clip][9] = objectPositions[clip][9]-0.6;
@@ -539,7 +539,7 @@ function createArrow(w, h, x, y, linx, liny, type, userData, img){
       hack3[i+1] = 0.4;
     }
   }
-  console.log(hack3);
+  //console.log(hack3);
   
    // ADD THE BALLS 
    createBall(
@@ -691,16 +691,16 @@ function Start(structure,block1,block2,time,pos,pa, pb) {
   topBlock = block1;
   bottomBlock = block2;	
   pA = pa;
-  console.log('pA', pA);
+  //console.log('pA', pA);
   pB = pb;
-  console.log('pB', pB);
+  //console.log('pB', pB);
   visualize = true;
   SetupWorld();
 }
 
 //begin animation during visualization
 function beginVis() {
-    console.log("beginVis()")
+    //console.log("beginVis()")
   if (visualize) {stage.addEventListener(Event.ENTER_FRAME, animateWorld)}
 }
 
