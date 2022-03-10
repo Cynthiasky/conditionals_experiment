@@ -1,5 +1,5 @@
 <template>
-  <Experiment title="conditionals experiment">
+  <Experiment title="conditionals">
     <InstructionScreen :title="'Welcome'">
       Thank you for participating this experiment! 
       <br />
@@ -105,7 +105,7 @@ var opt = {'if':_.template('If Ball A passes the <%= block_gate %>, Ball E will 
 'because':_.template('Ball E passed the gate because Ball A passed the <%= block_gate %>.')};
 
 
-var genTrials = function(data, exp, size) {
+var genTrials = function(data, condition, size) {
  // for each condition, sample exp trials with size 
   var sample = _.chain(data)
       .groupBy('structure')
@@ -117,14 +117,14 @@ var genTrials = function(data, exp, size) {
  // get forced choice questions 
  var gen_opt = _.map(sample, function(t) {
     if(_.startsWith(t.structure,'common')) {
-      t.option1 = opt[exp]({'block_gate': _.startsWith(t.pos,'Aright')?'block':'gate'});
-      t.option2 = _.replace(opt[exp]({'block_gate': _.startsWith(t.pos,'Aright')?'gate':'block'}),'A','B');
+      t.option1 = opt[condition]({'block_gate': _.startsWith(t.pos,'Aright')?'block':'gate'});
+      t.option2 = _.replace(opt[condition]({'block_gate': _.startsWith(t.pos,'Aright')?'gate':'block'}),'A','B');
     }
     else {
-      t.option1 = opt[exp]({'block_gate': 'block'});
-      t.option2 = _.replace(opt[exp]({'block_gate': 'block'}),'A','B');
+      t.option1 = opt[condition]({'block_gate': 'block'});
+      t.option2 = _.replace(opt[condition]({'block_gate': 'block'}),'A','B');
     }
-    t.exp = exp;
+    t.condition = condition;
     return t;
  });
  return _.shuffle(gen_opt);
@@ -144,7 +144,7 @@ var myConcat = function(d) {
     var t = idx[i];
     all = _.concat(_.slice(all,0,t), control[i], _.slice(all,t,all.length));
   }
-  //console.log(_.filter(all,['exp','if']));
+  //console.log(_.filter(all,['condition','if']));
   // todo: avoid same cond together
   return all;
 };
