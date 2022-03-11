@@ -80,6 +80,7 @@
     <!-- the test phase -->
     <template v-for="(trial, i) in trialData">
       <MyMultipleChoiceScreen
+        :key="i"
         :trial=trial
         question="Choose one sentence that accurately describe the situation:"
         :options="[trial.option1,trial.option2]"

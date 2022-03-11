@@ -3,7 +3,6 @@
   <Screen :progress="progress">
     <Slide>
     <template>
-      <Record :data="trial" />
       <iframe
         id="physics-world-iframe"
         src="physics_world.html"
@@ -22,6 +21,9 @@
             (pA = trial.pA),
             (pB = trial.pB)
         )" />
+        
+      <Record :data="trial" />
+
       <button
         v-if="trial.condition=='because'||trial.condition=='video'"
         id="simulate"
@@ -40,21 +42,28 @@
       >
         Watch
       </button>
+    <!--quickly skip screen quickly debug-->
+    <KeypressInput
+            :keys="{
+              '~': 'skip'
+            }"
+            :showOptions=false
+            @update:response="$magpie.nextScreen();" />
     </template>
+    
 
     <template>
-      <Record
+      <!--Record
         :data="{
-          question
+          question:
         }"
-      />
+      /-->
       <div v-if="trial.condition=='if' || trial.condition=='picture' || videoWatched">
       <p v-if="question && !showFeedback" v-text="question"></p>
       <MultipleChoiceInput
         v-if="!showFeedback"
         :options="options"
         :response.sync="$magpie.measurements.response"
-        
       />
       </div>
       <div v-if="
