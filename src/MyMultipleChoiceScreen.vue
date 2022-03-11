@@ -54,7 +54,7 @@
         v-if="!showFeedback"
         :options="options"
         :response.sync="$magpie.measurements.response"
-        @update:response="nextAfterResponse"
+        
       />
       </div>
       <div v-if="
