@@ -1,6 +1,6 @@
 condition,structure,block1,block2,time,pos,pA,pB,option1,option2,answer,feedback
 picture,chain,false,false,300,Aright,0.8,0.2,"Ball A is the initially moving ball.","Ball B is the initially moving ball.","Ball A is the initially moving ball.","Wrong. There is an arrow under Ball A, so it is the initially moving ball."
-video,common_single,,false,300,Aleft_Etop,,0.2,"Ball A hit Ball E.","Ball B hit Ball E.","Ball B hit Ball E.","Wrong. Ball A is not the initially moving ball."
+video,common_single,false,false,300,Aleft_Etop,0.2,0.2,"Ball A hit Ball E.","Ball B hit Ball E.","Ball B hit Ball E.","Wrong. Ball A is not the initially moving ball."
 picture,single,false,false,300,Abottom_Etop,0.8,0.8,"Ball A will hit Ball E.","Ball B will hit Ball E.","Ball B will hit Ball E.","Wrong. Ball A is not a moving ball, and Ball E is on the way of Ball B."
 picture,conjunctive,false,false,300,Abottom,0.2,0.8,"Ball A is more likely to pass the block than Ball B.","Ball B is more likely to pass the block than Ball A.","Ball B is more likely to pass the block than Ball A.","Wrong. The darker red block (more likely to block) is on the way of Ball A."
 video,conjunctive,true,false,300,Atop,0.2,0.8,"Ball E passed the gate.","Only when both balls pass the block, Ball E can pass the gate.","Only when both balls pass the block, Ball E can pass the gate.","Wrong. In this situation, both balls are needed to let E pass the gate."
