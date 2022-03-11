@@ -132,8 +132,8 @@ function SetupWorld(){
   90, 
   0.5, // bottom block 
   0.25,
-  0,
-  0,
+  -8,
+  -8,
   0]
   
 
