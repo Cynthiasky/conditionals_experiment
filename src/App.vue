@@ -35,12 +35,12 @@
     </InstructionScreen>
 
     <InstructionScreen :title="'Practice'">
-      Let's see some examples to get familar with the information before!
+      Let's see some examples to get familar with the information before starting the main experiment!
       <br />
       <br />
-      In this section, you will see some pictures or video clips. You have to choose the correct answer from two options for each situation. There is only one correct answer. 
+      In this section, you will see some pictures or video clips. You have to choose the correct answer from two options for each situation. There is only one correct answer. The purpose of this practice part is to get you familiar with the displays and the behavior of the balls.
       <br />
-      Then, you will have a feedback about your choice (correct or the reason of wrong). 
+      After each selection, you will receive feedback about your choice (if it was correct or why it was wrong). 
       <br />
       <br />
       Press the button to start...
@@ -50,7 +50,7 @@
     <template v-for="(trial, i) in practiceData">
       <MyMultipleChoiceScreen
         :trial=trial
-        question="According to the situation above, choose one of the correct answer:"
+        question="According to the situation above, which description is correct:"
         :options="[trial.option1,trial.option2]"
       >
       </MyMultipleChoiceScreen>
@@ -60,16 +60,23 @@
       Congratuations! Now you can continue with the main part of the experiment.
       <br />
       <br />
-      In this section, you will see some pictures or video clips. You have to choose one of the two options that you think is the better discription of the situation. There is no correct or wrong answer, and you will not receive feedback after your choice. 
+      In this section, you will pictures or video clips just like during the practice trial. 
+      You will see two sentences for each picture or video.
+      <strong>Your task is to choose the sentence which better describes the situation.</strong> 
+      There might not be a correct answer.
+      Sometimes both sentences might be acceptable, sometimes neither.
+      Just choose the sentence which you think is intuitively a better description.
+      You will not receive feedback after your choice. 
       <br />
-      You will see an optional text box after your choice, and you can freely write a better description that is not given in the options.
+      Afer each choice, you will see a text box. If you like, you can freely write a better description that is not given in the options. 
+      <strong>Writing anything in the textbox is entirely optional.</strong>
       <br />
       <br />
       Please note: 
       <br />
       The positions of the blocks and balls can vary accross clips or pictures. 
       <br />
-      Also, the questions will be different with the examples before. The questions may change for different situations. So please read each question carefully and think over your preference. 
+      Also, the questions will be different from the examples before. The questions may change for different situations. So please read each question carefully and think over your preference. 
       <br />
       <br />
       Good luck!
@@ -82,7 +89,7 @@
       <MyMultipleChoiceScreen
         :key="i"
         :trial=trial
-        question="Choose one sentence that accurately describe the situation:"
+        question="Choose the sentence that better describes the situation:"
         :options="[trial.option1,trial.option2]"
         :progress="i/trialData.length"
       />
