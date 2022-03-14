@@ -35,7 +35,10 @@ var position;
 var pA;
 var pB;
 
+// for arrows
 var hack3 = [];
+var pos_arrow = 1;
+
 
 //START FUNCTION
 function SetupWorld(){
@@ -471,6 +474,7 @@ function createArrow(w, h, x, y, linx, liny, type, userData, img){
     objectPositions[clip][3] = objectPositions[clip][3]*(-1);
     objectPositions[clip][5] = 6-objectPositions[clip][1];
     objectPositions[clip][7] = objectPositions[clip][3]*(-1);
+    pos_arrow = -1;
     // bodies[4].SetUserData("bottomBlock");
     // bodies[5].SetUserData("topBlock");
   } // causal chain and single causation - control
@@ -526,7 +530,6 @@ function createArrow(w, h, x, y, linx, liny, type, userData, img){
     var vy = Math.abs(objectPositions[clip][v_pos[i+1]]);
     //var vx = objectPositions[clip][v_pos[i]];
     //var vy = objectPositions[clip][v_pos[i+1]];
-
     if (vx == 0 && vy == 0) {
       // out of the screen
       hack3[i] = -10;
@@ -534,9 +537,9 @@ function createArrow(w, h, x, y, linx, liny, type, userData, img){
     }
     else {
       //hack3[i] = objectPositions[clip][v_pos[i]-2] + (0.4/(vx+vy))*vy;
-      hack3[i] = (0.4/(vx+vy))*(vx-vy);
+      hack3[i] = objectPositions[clip][v_pos[i]-2]+objectPositions[clip][v_pos[i]]/2-(0.4/(vx+vy))*(vx-vy);
       //hack3[i] = 0.3
-      hack3[i+1] = 0.4;
+      hack3[i+1] = objectPositions[clip][v_pos[i]-1]+objectPositions[clip][v_pos[i+1]]+0.4;
     }
   }
   //console.log(hack3);
@@ -598,6 +601,13 @@ function createArrow(w, h, x, y, linx, liny, type, userData, img){
     "arrowB", //userdata 
     "static/images/arrow.png")
 
+    // disjunctive or conjunctive
+    if (clip == 0 || clip == 1) {
+      bodies[9].SetAngle(-pos_arrow*20*Math.PI/180);
+      bodies[10].SetAngle(pos_arrow*20*Math.PI/180);
+    }
+    
+
 
   
   //ADD CONTACT LISTENER
@@ -638,20 +648,33 @@ function animateWorld()
     var actor = actors[i];
     var p = body.GetPosition();
     var usr = body.GetUserData();
-    if (usr == "arrowA" || usr == "arrowB") {
-      var p_ball = bodies[i-3].GetPosition();
-      actor.x = (p_ball.x - ((usr=="arrowA")?hack3[0]:hack3[2]))*ratio*scale;
-      actor.y = (p_ball.y + ((usr=="arrowA")?hack3[1]:hack3[3]))*ratio*scale;
-    }
-    else {
+    //if (usr == "arrowA" || usr == "arrowB") {
+      //var p_ball = bodies[i-3].GetPosition();
+      //actor.x = (p_ball.x - ((usr=="arrowA")?hack3[0]:hack3[2]))*ratio*scale;
+      //actor.y = (p_ball.y + ((usr=="arrowA")?hack3[1]:hack3[3]))*ratio*scale;
+    //  actor.x = ((usr=="arrowA")?hack3[0]:hack3[2])*ratio*scale;
+    //  actor.y = ((usr=="arrowA")?hack3[1]:hack3[3])*ratio*scale;
+    //}
+    //else {
       actor.x = p.x * ratio* scale;
       actor.y = p.y * ratio* scale;
-    }
+    //}
     actor.rotation = body.GetAngle() * 180 / Math.PI;    
   }
 
-  counter++
-  
+  counter++;
+  // for arrows, disappear after some ms
+  if(counter == 40) {
+    world.DestroyBody(bodies[10]);
+    world.DestroyBody(bodies[9]);
+    // disappear if the trial is a whole video clip
+    if (duration > 150) {
+      stage.removeChild(actors[10]);
+      stage.removeChild(actors[9]);
+    }
+  }
+
+
   //end of clip
   if (counter == duration){
     // modify to solve the arrow
