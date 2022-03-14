@@ -13,7 +13,8 @@
 
     <InstructionScreen :title="'Instructions'">
       In this experiment, you will see pictures or video clips of <span style='color:#3EA333;font-weight:bold'>Ball A</span>, 
-      <span style='color:#2662E0;font-weight:bold'>Ball B</span> and <b>Ball E</b>. Also, there are one or two red motion blocks.
+      <span style='color:#2662E0;font-weight:bold'>Ball B</span> and <b>Ball E</b>. Also, there are one or two red motion blocks. 
+      The balls and blocks are surrounded by walls. There is a gate on the left side that allows balls to pass through.
       <br />
       <br />
       There will be an arrow below the initially moving ball(s). The light red block has a 20% chance to blocking a ball, while the dark red block has an 80% chance. 
@@ -60,7 +61,7 @@
       Congratuations! Now you can continue with the main part of the experiment.
       <br />
       <br />
-      In this section, you will pictures or video clips just like during the practice trial. 
+      In this section, you will see pictures or video clips just like during the practice trial. 
       You will see two sentences for each picture or video.
       <strong>Your task is to choose the sentence which better describes the situation.</strong> 
       There might not be a correct answer.
