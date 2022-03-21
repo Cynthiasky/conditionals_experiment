@@ -130,13 +130,13 @@ var genTrials = function(data, condition, size) {
     if(_.startsWith(t.structure,'common')) {
       t.option1 = opt[condition]({'block_gate': _.startsWith(t.pos,'Aright')?'block':'gate'});
       t.option2 = _.replace(opt[condition]({'block_gate': _.startsWith(t.pos,'Aright')?'gate':'block'}),'A','B');
-      //t.expect_ans = ;
-    }
+}
     else {
       t.option1 = opt[condition]({'block_gate': 'block'});
       t.option2 = _.replace(opt[condition]({'block_gate': 'block'}),'A','B');
-    }
-    t.expect_ans = (t.expect_event=="A")?t.option1:t.option2;
+  }
+    t.expect_ans = ((t.expect_event=='A')?t.option1:t.option2);
+    //console.log(t.expect_event);
     t.condition = condition;
     return t;
   });
@@ -166,8 +166,8 @@ var myConcat = function(d) {
       _.pullAllWith(all,[t],_.isEqual);
     }
   }
-  //console.log(_.filter(new_all,['condition','if']).length);
-  //console.log(_.filter(new_all,['condition','because']).length);
+  
+ 
 
   var idx = [4, 9, 14, 19];
   for(var i = 0; i < idx.length; i++) {
@@ -175,6 +175,8 @@ var myConcat = function(d) {
     new_all = _.concat(_.slice(new_all,0,t), control[i], _.slice(new_all,t,new_all.length));
   }
   //console.log(_.filter(all,['condition','if']));
+  //console.log(_.filter(new_all,['expect_event','A']).length);
+  //console.log(_.filter(new_all,['expect_event','B']).length);
   return new_all;
 };
 var trialData = myConcat(trialsAll);

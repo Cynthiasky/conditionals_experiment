@@ -1,4 +1,4 @@
-experiment,condition,structure,block1,block2,time,pos,pA,pB,option1,option2,expect_event
+experiment,condition,structure,block1,block2,time,pos,pA,pB,expect_event
 main,if,common_single,false,false,300,Aleft_Ebottom,0.2,0.2,B
 main,if,common_single,false,false,300,Aleft_Etop,0.8,0.8,B
 main,if,common_single,false,false,300,Aright_Ebottom,0.8,0.8,A
