@@ -51,6 +51,7 @@
     <template v-for="(trial, i) in practiceData">
       <MyMultipleChoiceScreen
         :trial=trial
+        :idx="i"
         question="According to the situation above, which description is correct:"
         :options="[trial.option1,trial.option2]"
       >
@@ -88,7 +89,7 @@
     <!-- the test phase -->
     <template v-for="(trial, i) in trialData">
       <MyMultipleChoiceScreen
-        :key="i"
+        :idx="i"
         :trial=trial
         question="Choose the sentence that better describes the situation:"
         :options="[trial.option1,trial.option2]"
@@ -129,15 +130,18 @@ var genTrials = function(data, condition, size) {
     if(_.startsWith(t.structure,'common')) {
       t.option1 = opt[condition]({'block_gate': _.startsWith(t.pos,'Aright')?'block':'gate'});
       t.option2 = _.replace(opt[condition]({'block_gate': _.startsWith(t.pos,'Aright')?'gate':'block'}),'A','B');
+      //t.expect_ans = ;
     }
     else {
       t.option1 = opt[condition]({'block_gate': 'block'});
       t.option2 = _.replace(opt[condition]({'block_gate': 'block'}),'A','B');
     }
+    t.expect_ans = (t.expect_event=="A")?t.option1:t.option2;
     t.condition = condition;
     return t;
- });
- return _.shuffle(gen_opt);
+  });
+  //return _.shuffle(gen_opt);
+  return gen_opt;
 };
 
 var myConcat = function(d) {
@@ -145,18 +149,33 @@ var myConcat = function(d) {
   var a = genTrials(d,'if',2);
   var b = genTrials(copyd,'because',2);
 
-  var all =  _.shuffle(_.concat(a,b));
+  //var all =  _.shuffle(_.concat(a,b));
+  var all =  _.concat(a,b);
   var control = _.shuffle(_.remove(all,['structure','single']));
-  all = _.shuffle(all);
+  //all = _.shuffle(all);
+
+  var new_all = [];
+  //all = [];
+  var struct_all = ['common_single','common_both','chain','disjunctive','conjunctive'];
+  for(var i = 0; i < 4; i++) {
+  // shuffle cond_li every 4 ?
+    struct_all = _.shuffle(struct_all);
+    for(var j = 0; j < 5; j++) {
+      var t = _.cloneDeep(_.sample(_.filter(all,['structure',struct_all[j]])));
+      new_all.push(t);
+      _.pullAllWith(all,[t],_.isEqual);
+    }
+  }
+  //console.log(_.filter(new_all,['condition','if']).length);
+  //console.log(_.filter(new_all,['condition','because']).length);
 
   var idx = [4, 9, 14, 19];
-  for(var i=0; i<idx.length; i++) {
+  for(var i = 0; i < idx.length; i++) {
     var t = idx[i];
-    all = _.concat(_.slice(all,0,t), control[i], _.slice(all,t,all.length));
+    new_all = _.concat(_.slice(new_all,0,t), control[i], _.slice(new_all,t,new_all.length));
   }
   //console.log(_.filter(all,['condition','if']));
-  // todo: avoid same cond together
-  return all;
+  return new_all;
 };
 var trialData = myConcat(trialsAll);
 

@@ -1,6 +1,6 @@
 
 <template>
-  <Screen :progress="progress">
+  <Screen :progress="progress" :idx="idx">
     <Slide>
     <template>
       <iframe
@@ -22,7 +22,7 @@
             (pB = trial.pB)
         )" />
         
-      <Record :data="trial" />
+      <Record :data="{...trial, key:idx}" />
 
       <button
         v-if="trial.condition=='because'||trial.condition=='video'"
@@ -74,18 +74,20 @@
         ">
         <div v-if="trial.condition != 'picture' && trial.condition != 'video'">
         <p>(Optional) Do you prefer other discriptions?</p>
-        <TextareaInput :response.sync="$magpie.measurements.comments" />
+        <TextareaInput :response.sync="$magpie.measurements.alt_description" />
         </div>
 
     <div v-if="(trial.condition=='video' || trial.condition=='picture')&&showFeedback">
-        <p v-if="$magpie.measurements.response == trial.answer">Correct!</p>
+        <p v-if="$magpie.measurements.response == trial.expect_ans">Correct!</p>
         <p v-else >{{ trial.feedback }}</p>
         <button @click="resetFeedback(trial.condition,false);resetClicked(trial.condition,false);">Ok</button>
     </div>
+
         <button v-if="!showFeedback" @click="$magpie.saveMeasurements();resetFeedback(trial.condition,true);resetClicked(trial.condition,false);"
         >
         Next
         </button>
+
       </div>
     </template>
     </Slide>
@@ -121,6 +123,11 @@ export default {
       type: Number,
       default: undefined
     },
+
+    idx: {
+      type: Number,
+      default: undefined
+    }
   },
   data() {
     return {
