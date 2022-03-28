@@ -4,7 +4,7 @@
       Thank you for participating this experiment! 
       <br />
       <br />
-      The experiment will take less than 10 minutes. You will see pictures or video clips of three billiard balls. 
+      The experiment will take less than 10 minutes (including a practice session and the main experiment). You will see pictures or video clips of three billiard balls. 
       Then you will be asked to answer some questions about the situation. 
       <br />
       <br />
@@ -13,11 +13,13 @@
 
     <InstructionScreen :title="'Instructions'">
       In this experiment, you will see pictures or video clips of <span style='color:#3EA333;font-weight:bold'>Ball A</span>, 
-      <span style='color:#2662E0;font-weight:bold'>Ball B</span> and <b>Ball E</b>. Also, there are one or two red motion blocks. 
-      The balls and blocks are surrounded by walls. There is a gate on the left side that allows balls to pass through.
+      <span style='color:#2662E0;font-weight:bold'>Ball B</span> and <b>Ball E</b>. There will be an arrow below the initially moving ball(s). 
       <br />
       <br />
-      There will be an arrow below the initially moving ball(s). The light red block has a 20% chance to blocking a ball, while the dark red block has an 80% chance. 
+      Also, there are one or two red motion blocks. The <span style='color:rgba(255, 0, 0, 0.35);font-weight:bold'>light red block</span> has a 20% chance to blocking a ball, while the <span style='color:rgba(255, 0, 0, 0.8);font-weight:bold'>dark red block</span> has an 80% chance. 
+      <br />
+      <br />
+      The balls and blocks are surrounded by walls. There is a <span style='font-weight:bold'>gate</span> on the left side that allows balls to pass through.
       <br />
       <br />        
       For example, you may see a situation like this: 
@@ -28,7 +30,7 @@
       </div>
       <br />
       In this example, both <span style='color:#3EA333;font-weight:bold'>Ball A</span> and <span style='color:#2662E0;font-weight:bold'>Ball B</span> are initially moving. 
-      The darker red block is on the way of <span style='color:#3EA333;font-weight:bold'>Ball A</span>, 
+      The <span style='color:rgba(255, 0, 0, 0.35);font-weight:bold'>darker red block</span> is on the way of <span style='color:#3EA333;font-weight:bold'>Ball A</span>, 
       so <span style='color:#3EA333;font-weight:bold'>Ball A</span> is more likely to be blocked than <span style='color:#2662E0;font-weight:bold'>Ball B</span>.
       <br />
       <br />
@@ -39,14 +41,15 @@
       Let's see some examples to get familar with the information before starting the main experiment!
       <br />
       <br />
-      In this section, you will see some pictures or video clips. You have to choose the correct answer from two options for each situation. There is only one correct answer. The purpose of this practice part is to get you familiar with the displays and the behavior of the balls.
+      In this pratice section, you will see some pictures or video clips. You have to choose the correct answer from two options for each situation. <strong>There is only one correct answer.</strong> The purpose of this practice part is to get you familiar with the displays and the behavior of the balls.
+      <br />
       <br />
       After each selection, you will receive feedback about your choice (if it was correct or why it was wrong). 
       <br />
       <br />
-      Press the button to start...
+      Press the button to continue...
     </InstructionScreen>
-
+    
     <!-- the practice phase -->
     <template v-for="(trial, i) in practiceData">
       <MyMultipleChoiceScreen
@@ -58,7 +61,7 @@
       </MyMultipleChoiceScreen>
     </template>
 
-    <InstructionScreen :title="'Experiment'">
+    <InstructionScreen :title="'Main experiment'">
       Congratuations! Now you can continue with the main part of the experiment.
       <br />
       <br />
@@ -68,23 +71,30 @@
       There might not be a correct answer.
       Sometimes both sentences might be acceptable, sometimes neither.
       Just choose the sentence which you think is intuitively a better description.
-      You will not receive feedback after your choice. 
+      <br />
+      You will not receive feedback after your choice in this section. 
+      <br />
       <br />
       Afer each choice, you will see a text box. If you like, you can freely write a better description that is not given in the options. 
       <strong>Writing anything in the textbox is entirely optional.</strong>
       <br />
       <br />
-      Please note: 
-      <br />
-      The positions of the blocks and balls can vary accross clips or pictures. 
-      <br />
-      Also, the questions will be different from the examples before. The questions may change for different situations. So please read each question carefully and think over your preference. 
-      <br />
-      <br />
-      Good luck!
+      Press the button below to continue...
+    </InstructionScreen>
+    <InstructionScreen :title="'Main experiment'">
+      Please keep in mind: 
       <br />
       <br />
-      Press the button below to start...
+      1. You have to choose the sentence which better describes the situation. 
+      <br />
+      <br />
+      2. The questions will be different from the examples before and may change for different situations. So please read each question carefully and think over your preference. 
+      <br />
+      <br />
+      3. The <span style='color:rgba(255, 0, 0, 0.35);font-weight:bold'>light red block</span> has a 20% chance to blocking a ball, while the <span style='color:rgba(255, 0, 0, 0.8);font-weight:bold'>dark red block</span> has an 80% chance. 
+      <br />
+      <br />
+      When you are ready, press the button below to start...
     </InstructionScreen>
     <!-- the test phase -->
     <template v-for="(trial, i) in trialData">

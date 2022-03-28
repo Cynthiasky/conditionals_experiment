@@ -83,7 +83,7 @@
         <button @click="resetFeedback(trial.condition,false);resetClicked(trial.condition,false);">Ok</button>
     </div>
 
-        <button v-if="!showFeedback" @click="$magpie.saveMeasurements();resetFeedback(trial.condition,true);resetClicked(trial.condition,false);"
+        <button v-if="!showFeedback" @click="resetFeedback(trial.condition,true);resetClicked(trial.condition,false);"
         >
         Next
         </button>
@@ -149,6 +149,11 @@ export default {
       else {
         this.videoWatched = clicked;
         if(!this.showFeedback && !clicked) {
+          if((cond == 'if' || cond == 'because') && $magpie.measurements.alt_description===undefined) {
+            //console.log($magpie.measurements.alt_description);
+            $magpie.measurements.alt_description = "NA";
+          }
+          $magpie.saveMeasurements();
           $magpie.nextScreen();
         }
       }
