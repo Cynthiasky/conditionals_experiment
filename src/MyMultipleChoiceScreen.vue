@@ -10,7 +10,8 @@
         height="300"
       ></iframe>
       <div id="simulation_text" style="text-align: center;" v-if="trial.condition=='because'||trial.condition=='video'">
-        <p>Please press 'Watch' to view the video.</p>
+        <p>Please press 'WATCH' to view the video.</p>
+        <p style='color:rgb(169,169,169)'>(You can always watch again by pressing 'WATCH' again.)</p>
       </div>
       <Wait :time="800" @done="startScene(
             (structure = trial.structure),

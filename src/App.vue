@@ -30,7 +30,7 @@
       </div>
       <br />
       In this example, both <span style='color:#3EA333;font-weight:bold'>Ball A</span> and <span style='color:#2662E0;font-weight:bold'>Ball B</span> are initially moving. 
-      The <span style='color:rgba(255, 0, 0, 0.35);font-weight:bold'>darker red block</span> is on the way of <span style='color:#3EA333;font-weight:bold'>Ball A</span>, 
+      The <span style='color:rgba(255, 0, 0, 0.8);font-weight:bold'>darker red block</span> is on the way of <span style='color:#3EA333;font-weight:bold'>Ball A</span>, 
       so <span style='color:#3EA333;font-weight:bold'>Ball A</span> is more likely to be blocked than <span style='color:#2662E0;font-weight:bold'>Ball B</span>.
       <br />
       <br />
@@ -47,7 +47,7 @@
       After each selection, you will receive feedback about your choice (if it was correct or why it was wrong). 
       <br />
       <br />
-      Press the button to continue...
+      Press the button to start...
     </InstructionScreen>
     
     <!-- the practice phase -->
@@ -88,7 +88,7 @@
       1. You have to choose the sentence which better describes the situation. 
       <br />
       <br />
-      2. The questions will be different from the examples before and may change for different situations. So please read each question carefully and think over your preference. 
+      2. The questions will be different from the examples before and may change for different situations. So please read each question carefully and think about your preferences. 
       <br />
       <br />
       3. The <span style='color:rgba(255, 0, 0, 0.35);font-weight:bold'>light red block</span> has a 20% chance to blocking a ball, while the <span style='color:rgba(255, 0, 0, 0.8);font-weight:bold'>dark red block</span> has an 80% chance. 
