@@ -10,8 +10,8 @@
         height="300"
       ></iframe>
       <div id="simulation_text" style="text-align: center;" v-if="trial.condition=='because'||trial.condition=='video'">
-        <p>Please press 'WATCH' to view the video.</p>
-        <p style='color:rgb(169,169,169)'>(You can always watch again by pressing 'WATCH' again.)</p>
+        <p>Please press 'START' to watch the video.</p>
+        <p style='color:rgb(169,169,169)'>(You can always watch again by pressing 'START' again.)</p>
       </div>
       <Wait :time="800" @done="startScene(
             (structure = trial.structure),
@@ -41,7 +41,7 @@
             (pB = trial.pB)
           );resetClicked(trial.condition,true);"
       >
-        Watch
+        Start
       </button>
     <!--quickly skip screen quickly debug-->
     <KeypressInput
@@ -74,7 +74,7 @@
           !$magpie.validateMeasurements.response.$invalid)
         ">
         <div v-if="trial.condition != 'picture' && trial.condition != 'video'">
-        <p>(Optional) Do you prefer other discriptions?</p>
+        <p>(Optional) Do you prefer other descriptions?</p>
         <TextareaInput :response.sync="$magpie.measurements.alt_description" />
         </div>
 

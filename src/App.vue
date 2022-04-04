@@ -1,7 +1,7 @@
 <template>
   <Experiment title="conditionals">
     <InstructionScreen :title="'Welcome'">
-      Thank you for participating this experiment! 
+      Thank you for participating in this experiment! 
       <br />
       <br />
       The experiment will take less than 10 minutes (including a practice session and the main experiment). You will see pictures or video clips of three billiard balls. 
@@ -16,7 +16,7 @@
       <span style='color:#2662E0;font-weight:bold'>Ball B</span> and <b>Ball E</b>. There will be an arrow below the initially moving ball(s). 
       <br />
       <br />
-      Also, there are one or two red motion blocks. The <span style='color:rgba(255, 0, 0, 0.35);font-weight:bold'>light red block</span> has a 20% chance to blocking a ball, while the <span style='color:rgba(255, 0, 0, 0.8);font-weight:bold'>dark red block</span> has an 80% chance. 
+      Also, there are one or two red motion blocks. The <span style='color:rgba(255, 0, 0, 0.35);font-weight:bold'>light red block</span> has a 20% chance of blocking a ball, while the <span style='color:rgba(255, 0, 0, 0.8);font-weight:bold'>dark red block</span> has an 80% chance. 
       <br />
       <br />
       The balls and blocks are surrounded by walls. There is a <span style='font-weight:bold'>gate</span> on the left side that allows balls to pass through.
@@ -30,7 +30,7 @@
       </div>
       <br />
       In this example, both <span style='color:#3EA333;font-weight:bold'>Ball A</span> and <span style='color:#2662E0;font-weight:bold'>Ball B</span> are initially moving. 
-      The <span style='color:rgba(255, 0, 0, 0.8);font-weight:bold'>darker red block</span> is on the way of <span style='color:#3EA333;font-weight:bold'>Ball A</span>, 
+      The <span style='color:rgba(255, 0, 0, 0.8);font-weight:bold'>darker red block</span> is in the way of <span style='color:#3EA333;font-weight:bold'>Ball A</span>, 
       so <span style='color:#3EA333;font-weight:bold'>Ball A</span> is more likely to be blocked than <span style='color:#2662E0;font-weight:bold'>Ball B</span>.
       <br />
       <br />
@@ -38,10 +38,10 @@
     </InstructionScreen>
 
     <InstructionScreen :title="'Practice'">
-      Let's see some examples to get familar with the information before starting the main experiment!
+      Let's see some examples to get familiar with the information before starting the main experiment!
       <br />
       <br />
-      In this pratice section, you will see some pictures or video clips. You have to choose the correct answer from two options for each situation. <strong>There is only one correct answer.</strong> The purpose of this practice part is to get you familiar with the displays and the behavior of the balls.
+      In this practice section, you will see some pictures or video clips. You have to choose the correct answer from two options for each situation. <strong>There is only one correct answer.</strong> The purpose of this practice part is to get you familiar with the displays and the behavior of the balls.
       <br />
       <br />
       After each selection, you will receive feedback about your choice (if it was correct or why it was wrong). 
@@ -65,12 +65,12 @@
       Congratuations! Now you can continue with the main part of the experiment.
       <br />
       <br />
-      In this section, you will see pictures or video clips just like during the practice trial. 
+      In this section, you will see pictures or video clips just like during the practice session. 
       You will see two sentences for each picture or video.
-      <strong>Your task is to choose the sentence which better describes the situation.</strong> 
+      <strong>Your task is to choose the sentence that better describes the situation.</strong> 
       There might not be a correct answer.
       Sometimes both sentences might be acceptable, sometimes neither.
-      Just choose the sentence which you think is intuitively a better description.
+      Just choose the sentence that you think is intuitively a better description.
       <br />
       You will not receive feedback after your choice in this section. 
       <br />
@@ -85,13 +85,13 @@
       Please keep in mind: 
       <br />
       <br />
-      1. You have to choose the sentence which better describes the situation. 
+      1. Choose the sentence that better describes the situation. 
       <br />
       <br />
       2. The questions will be different from the examples before and may change for different situations. So please read each question carefully and think about your preferences. 
       <br />
       <br />
-      3. The <span style='color:rgba(255, 0, 0, 0.35);font-weight:bold'>light red block</span> has a 20% chance to blocking a ball, while the <span style='color:rgba(255, 0, 0, 0.8);font-weight:bold'>dark red block</span> has an 80% chance. 
+      3. The <span style='color:rgba(255, 0, 0, 0.35);font-weight:bold'>light red block</span> has a 20% chance of blocking a ball, while the <span style='color:rgba(255, 0, 0, 0.8);font-weight:bold'>dark red block</span> has an 80% chance. 
       <br />
       <br />
       When you are ready, press the button below to start...
@@ -122,8 +122,8 @@ import _ from 'lodash'
 import MyMultipleChoiceScreen from './MyMultipleChoiceScreen';
 
 
-var opt = {'if':_.template('If Ball A passes the <%= block_gate %>, Ball E will pass the gate.'),
-'because':_.template('Ball E passed the gate because Ball A passed the <%= block_gate %>.')};
+var opt = {'if':_.template("If Ball A passes the <%= block_gate %>, Ball E will pass the gate."),
+'because':_.template("Ball E passed the gate because Ball A passed the <%= block_gate %>.")};
 
 
 var genTrials = function(data, condition, size) {
