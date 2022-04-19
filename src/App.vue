@@ -50,16 +50,15 @@
       Press the button to start...
     </InstructionScreen>
     
-    <ProbTraining
-      >
+    <ProbTraining>
     </ProbTraining>
     <!-- the practice phase -->
-    <template v-for="(trial, i) in practiceData">
+    <template v-for="(trialp, i) in practiceData">
       <MyMultipleChoiceScreen
-        :trial=trial
+        :trial=trialp
         :idx="i"
         question="According to the situation above, which description is correct:"
-        :options="[trial.option1,trial.option2]"
+        :options="[trialp.option1,trialp.option2]"
       >
       </MyMultipleChoiceScreen>
     </template>
@@ -191,6 +190,7 @@ var myConcat = function(d) {
   //console.log(_.filter(all,['condition','if']));
   //console.log(_.filter(new_all,['expect_event','A']).length);
   //console.log(_.filter(new_all,['expect_event','B']).length);
+  console.log("done");
   return new_all;
 };
 var trialData = myConcat(trialsAll);

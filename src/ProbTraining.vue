@@ -58,8 +58,8 @@
       <SliderInput
         left='0%'        
         right='100%'
-        :initial='initBar'
-        interval='10'
+        :initial=initBar
+        :interval='10'
         :response.sync="$magpie.measurements.light"
       />
       </div>
@@ -69,7 +69,7 @@
           $magpie.measurements.light
         ">
         <div v-if="(trial.condition=='video')&&showFeedback">
-            <Wait :time="10" @done="genFeedback()" />
+            <Wait :time="100" @done="genFeedback()" />
             <p>{{feedback}}</p>
             <button class='green-btn' @click="resetFeedback(trial.condition,false);resetClicked(trial.condition,false);">Ok</button>
         </div>

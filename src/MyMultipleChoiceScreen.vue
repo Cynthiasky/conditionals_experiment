@@ -54,11 +54,7 @@
     
 
     <template>
-      <!--Record
-        :data="{
-          question:
-        }"
-      /-->
+      
       <div v-if="trial.condition=='if' || trial.condition=='picture' || videoWatched">
       <p v-if="question && !showFeedback" v-text="question"></p>
       <MultipleChoiceInput
