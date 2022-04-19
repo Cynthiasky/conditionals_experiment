@@ -17,13 +17,13 @@ var actors = [];  // instances of Bitmap (from IvanK)
 //100
 var scale = 100; //pixel to meter ratio; 1 meter = 100 pixels
 var visualize = true;
-var speed;
+//var speed;
 var ratio; //pixelratio (important for retina displays)
 var stage; //the stage   
 var fullX = 8
 var fullY = 6
 var ratio = window.devicePixelRatio/2;
-var speed = 2;
+var speed = 1.5; // default = 2
 // var speed = 0;
 var collision = false; //records whether the balls collided 
 var objectPositions = new Array();
@@ -65,11 +65,11 @@ function SetupWorld(){
 
   //symmetric overdetermination 
   objectPositions[0] = [
-  fullX + 0.3, //Ball A 
+  fullX-0.3, //default=fullX+0.3
   1.70, 
   -1, 
   .125, 
-  fullX + 0.3, //Ball B 
+  fullX-0.3, //Ball B =fullX+0.3
   4.3, 
   -1, 
   -.125, // Ball E 
@@ -91,11 +91,11 @@ function SetupWorld(){
 
   //symmetric joint causation 
   objectPositions[1] = [
-  fullX + 0.3, //Ball A 
+  fullX - 0.3, //Ball A fullX+0.3
   1.7,
   -1, 
   .22, 
-  fullX + 0.3, //Ball B 
+  fullX - 0.3, //Ball B fullX+0.3
   4.3,
   -1, 
   -.22, 
@@ -118,7 +118,7 @@ function SetupWorld(){
   objectPositions[2] = [
   fullX-1, //Ball A 
   3,
-  -1.5, 
+  -1, 
   0., 
   fullX-6, //Ball B 
   fullY/2-0.3,
@@ -144,7 +144,7 @@ function SetupWorld(){
   objectPositions[3] = [
   fullX-1, //Ball A 
   3,
-  -1.5, 
+  -1, 
   0, 
   fullX-4, //Ball B 
   3,
@@ -169,13 +169,13 @@ function SetupWorld(){
   objectPositions[4] = [
     fullX-1, //Ball A 
     2,
-    -1.5, 
+    -1, 
     0, 
     fullX-1, //Ball B 
     4,
+    -1, 
     0, 
-    0, 
-    fullX-6, //Ball E 
+    fullX-7, //Ball E 
     2, 
     0, 
     0,
@@ -194,7 +194,7 @@ function SetupWorld(){
 objectPositions[5] = [
   fullX-1, //Ball A 
   3,
-  -1.5, 
+  -1, 
   0., 
   fullX-6, //Ball B 
   fullY/2-0.3,
@@ -223,7 +223,7 @@ objectPositions[5] = [
 
     fixDef.density = 1; // Set the density
     fixDef.friction = 0; // Set the friction 
-    fixDef.restitution = 0; // Set the restitution - elasticity
+    fixDef.restitution = 0.2; // Set the restitution - elasticity
 
     // Define the shape of the fixture
     fixDef.shape = new b2PolygonShape;
@@ -428,7 +428,7 @@ function createArrow(w, h, x, y, linx, liny, type, userData, img){
     var hack2 = [];
 
     // 
-    if ((position == "Abottom") || (position.includes("Aleft"))){
+    if (position.includes("Abottom") || position.includes("Aleft")){
     //if (position == "Abottom" || position == "Aleft"){
     //if (position == "Abottom"){
       //console.log('block switch');
@@ -482,7 +482,7 @@ function createArrow(w, h, x, y, linx, liny, type, userData, img){
     objectPositions[clip][0] = objectPositions[clip][0]-3;
     objectPositions[clip][2] = 0;
     objectPositions[clip][4] = objectPositions[clip][4]+3;
-    objectPositions[clip][6] = -1.5;
+    objectPositions[clip][6] = -1;
   } // 
   // single causation
   else if (clip == 4) {
@@ -491,16 +491,16 @@ function createArrow(w, h, x, y, linx, liny, type, userData, img){
     // Etop is default for this condition
     if(new_pos[1] == 'Ebottom') {
       objectPositions[clip][9] = 4;
-      objectPositions[clip][2] = 0;
-      objectPositions[clip][6] = -1.5;
+      //objectPositions[clip][2] = 0;
+      //objectPositions[clip][6] = -1;
     }
     if(new_pos[0] == 'Abottom') {
       objectPositions[clip][1] = 4;
       // swap velocity of A and B
-      var temp = objectPositions[clip][2];
-      objectPositions[clip][2] = objectPositions[clip][6];
+      //var temp = objectPositions[clip][2];
+      //objectPositions[clip][2] = objectPositions[clip][6];
       objectPositions[clip][5] = 2;
-      objectPositions[clip][6] = temp;
+      //objectPositions[clip][6] = temp;
     }
   }
   // common causation
@@ -518,7 +518,7 @@ function createArrow(w, h, x, y, linx, liny, type, userData, img){
 
       objectPositions[clip][4] = fullX-1;
       objectPositions[clip][5] = 3;
-      objectPositions[clip][6] = -1.5;
+      objectPositions[clip][6] = -1;
     }
   } 
   
@@ -537,9 +537,9 @@ function createArrow(w, h, x, y, linx, liny, type, userData, img){
     }
     else {
       //hack3[i] = objectPositions[clip][v_pos[i]-2] + (0.4/(vx+vy))*vy;
-      hack3[i] = objectPositions[clip][v_pos[i]-2]+objectPositions[clip][v_pos[i]]/2-(0.4/(vx+vy))*(vx-vy);
+      hack3[i] = objectPositions[clip][v_pos[i]-2]+objectPositions[clip][v_pos[i]]/4-(0.4/(vx+vy))*(vx-vy);
       //hack3[i] = 0.3
-      hack3[i+1] = objectPositions[clip][v_pos[i]-1]+objectPositions[clip][v_pos[i+1]]+0.4;
+      hack3[i+1] = objectPositions[clip][v_pos[i]-1]+objectPositions[clip][v_pos[i+1]]+0.5;
     }
   }
   //console.log(hack3);
@@ -603,8 +603,8 @@ function createArrow(w, h, x, y, linx, liny, type, userData, img){
 
     // disjunctive or conjunctive
     if (clip == 0 || clip == 1) {
-      bodies[9].SetAngle(-pos_arrow*20*Math.PI/180);
-      bodies[10].SetAngle(pos_arrow*20*Math.PI/180);
+      bodies[9].SetAngle(-pos_arrow*10*Math.PI/180);
+      bodies[10].SetAngle(pos_arrow*10*Math.PI/180);
     }
     
 

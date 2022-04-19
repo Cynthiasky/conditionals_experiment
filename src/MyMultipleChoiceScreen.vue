@@ -13,11 +13,11 @@
         <p>Please press 'START' to watch the video.</p>
         <p style='color:rgb(169,169,169)'>(You can always watch again by pressing 'START' again.)</p>
       </div>
-      <Wait :time="800" @done="startScene(
+      <Wait :time="600" @done="startScene(
             (structure = trial.structure),
             (block1 = trial.block1),
             (block2 = trial.block2),
-            (time = 18),
+            (time = 2),
             (pos = trial.pos),
             (pA = trial.pA),
             (pB = trial.pB)
@@ -64,6 +64,7 @@
       <MultipleChoiceInput
         v-if="!showFeedback"
         :options="options"
+        :options-html="options"
         :response.sync="$magpie.measurements.response"
       />
       </div>
@@ -80,8 +81,8 @@
 
     <div v-if="(trial.condition=='video' || trial.condition=='picture')&&showFeedback">
         <p v-if="$magpie.measurements.response == trial.expect_ans">Correct!</p>
-        <p v-else >{{ trial.feedback }}</p>
-        <button @click="resetFeedback(trial.condition,false);resetClicked(trial.condition,false);">Ok</button>
+        <p v-else v-html="trial.feedback"></p>
+        <button class='green-btn' @click="resetFeedback(trial.condition,false);resetClicked(trial.condition,false);">Ok</button>
     </div>
 
         <button v-if="!showFeedback" @click="resetFeedback(trial.condition,true);resetClicked(trial.condition,false);"
@@ -167,4 +168,8 @@ export default {
   }
 };
 </script>
-<style scoped></style>
+<style scoped>
+.green-btn {
+  background-color: green;
+}
+</style>

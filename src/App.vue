@@ -50,6 +50,9 @@
       Press the button to start...
     </InstructionScreen>
     
+    <ProbTraining
+      >
+    </ProbTraining>
     <!-- the practice phase -->
     <template v-for="(trial, i) in practiceData">
       <MyMultipleChoiceScreen
@@ -118,12 +121,13 @@
 // Load data from csv files as javascript arrays with objects
 import trialsAll from '../trials/training_trials.csv';
 import practiceData from '../trials/practice_trials.csv'
+//import trainingProb from '../trials/training_prob_trials.csv'
 import _ from 'lodash'
 import MyMultipleChoiceScreen from './MyMultipleChoiceScreen';
+import ProbTraining from './ProbTraining';
 
-
-var opt = {'if':_.template("If Ball A passes the <%= block_gate %>, Ball E will pass the gate."),
-'because':_.template("Ball E passed the gate because Ball A passed the <%= block_gate %>.")};
+var opt = {'if':_.template("If <span style='color:#3EA333;font-weight:bold'>Ball A</span> passes through the <b><%= block_gate %></b>, Ball E will pass through the gate."),
+'because':_.template("Ball E passed through the gate because <span style='color:#3EA333;font-weight:bold'>Ball A</span> passed through the <b><%= block_gate %></b>.")};
 
 
 var genTrials = function(data, condition, size) {
@@ -139,11 +143,11 @@ var genTrials = function(data, condition, size) {
  var gen_opt = _.map(sample, function(t) {
     if(_.startsWith(t.structure,'common')) {
       t.option1 = opt[condition]({'block_gate': _.startsWith(t.pos,'Aright')?'block':'gate'});
-      t.option2 = _.replace(opt[condition]({'block_gate': _.startsWith(t.pos,'Aright')?'gate':'block'}),'A','B');
+      t.option2 = _.replace(opt[condition]({'block_gate': _.startsWith(t.pos,'Aright')?'gate':'block'}),"<span style='color:#3EA333;font-weight:bold'>Ball A</span>","<span style='color:#2662E0;font-weight:bold'>Ball B</span>");
 }
     else {
       t.option1 = opt[condition]({'block_gate': 'block'});
-      t.option2 = _.replace(opt[condition]({'block_gate': 'block'}),'A','B');
+      t.option2 = _.replace(opt[condition]({'block_gate': 'block'}),"<span style='color:#3EA333;font-weight:bold'>Ball A</span>","<span style='color:#2662E0;font-weight:bold'>Ball B</span>");
   }
     t.expect_ans = ((t.expect_event=='A')?t.option1:t.option2);
     //console.log(t.expect_event);
@@ -194,13 +198,13 @@ var trialData = myConcat(trialsAll);
 export default {
   name: 'App',
   components: {
-    MyMultipleChoiceScreen
+    MyMultipleChoiceScreen,
+    ProbTraining
   },
   data() {
     return {
       trialData: trialData,
       trialsAll: trialsAll,
-      //trialData: _.shuffle(trialData),
       practiceData: practiceData
     };
   },
