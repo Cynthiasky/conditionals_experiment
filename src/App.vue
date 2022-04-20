@@ -16,7 +16,7 @@
       <span style='color:#2662E0;font-weight:bold'>Ball B</span> and <b>Ball E</b>. There will be an arrow below the initially moving ball(s). 
       <br />
       <br />
-      Also, there are one or two red motion blocks. The <span style='color:rgba(255, 0, 0, 0.35);font-weight:bold'>light red block</span> has a 20% chance of blocking a ball, while the <span style='color:rgba(255, 0, 0, 0.8);font-weight:bold'>dark red block</span> has an 80% chance. 
+      Also, there are one or two red motion blocks. The <span style='color:rgba(255, 0, 0, 0.35);font-weight:bold'>light red block</span> has a <b>lower</b> chance of blocking a ball than the <span style='color:rgba(255, 0, 0, 0.8);font-weight:bold'>dark red block</span>. 
       <br />
       <br />
       The balls and blocks are surrounded by walls. There is a <span style='font-weight:bold'>gate</span> on the left side that allows balls to pass through.
@@ -30,18 +30,35 @@
       </div>
       <br />
       In this example, both <span style='color:#3EA333;font-weight:bold'>Ball A</span> and <span style='color:#2662E0;font-weight:bold'>Ball B</span> are initially moving. 
-      The <span style='color:rgba(255, 0, 0, 0.8);font-weight:bold'>darker red block</span> is in the way of <span style='color:#3EA333;font-weight:bold'>Ball A</span>, 
+      The <span style='color:rgba(255, 0, 0, 0.8);font-weight:bold'>dark red block</span> is in the way of <span style='color:#3EA333;font-weight:bold'>Ball A</span>, 
       so <span style='color:#3EA333;font-weight:bold'>Ball A</span> is more likely to be blocked than <span style='color:#2662E0;font-weight:bold'>Ball B</span>.
       <br />
       <br />
       Press the button below to continue...
     </InstructionScreen>
 
-    <InstructionScreen :title="'Practice'">
-      Let's see some examples to get familiar with the information before starting the main experiment!
+    <InstructionScreen :title="'Practice 1'">
+      Let's guess the chance of the red blocks blocking a ball!
       <br />
       <br />
-      In this practice section, you will see some pictures or video clips. You have to choose the correct answer from two options for each situation. <strong>There is only one correct answer.</strong> The purpose of this practice part is to get you familiar with the displays and the behavior of the balls.
+      In this practice section 1, you will see some video clips. You have to slide the bar to guess the chance of blocking based on the video. The purpose of this practice part is to get you familiar with how the blocks work.
+      <br />
+      <br />
+      After each selection, you will receive feedback about your choice (if it was higher or lower than the true value). 
+      <br />
+      <br />
+      Press the button to start...
+    </InstructionScreen>
+    <!--practice the probabilities of the blocks-->
+    <ProbTraining>
+    </ProbTraining>
+
+    <!--practice-->
+    <InstructionScreen :title="'Practice 2'">
+      Let's see more examples to get familiar with the information before starting the main experiment!
+      <br />
+      <br />
+      In this practice section 2, you will see some pictures or video clips. You have to choose the correct answer from two options for each situation. <strong>There is only one correct answer.</strong> The purpose of this practice part is to get you familiar with the displays and the behavior of the balls.
       <br />
       <br />
       After each selection, you will receive feedback about your choice (if it was correct or why it was wrong). 
@@ -49,9 +66,6 @@
       <br />
       Press the button to start...
     </InstructionScreen>
-    
-    <ProbTraining>
-    </ProbTraining>
     <!-- the practice phase -->
     <template v-for="(trialp, i) in practiceData">
       <MyMultipleChoiceScreen

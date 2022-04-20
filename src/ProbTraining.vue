@@ -141,3 +141,8 @@ export default {
   }
 };
 </script>
+<style scoped>
+.green-btn {
+  background-color: green;
+}
+</style>
