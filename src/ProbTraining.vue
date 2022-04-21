@@ -53,8 +53,8 @@
       <template>
       <div v-if="videoWatched && !showFeedback">
       <p>According to the videos above, guess the following probabilities.</p>
-      <p>The chance of the <span style='color:rgba(255, 0, 0, 0.35);font-weight:bold'>light red block</span> blocking a ball is around: {{$magpie.measurements.light?$magpie.measurements.light:50}}% </p>
-      <p>The chance of the <span style='color:rgba(255, 0, 0, 0.8);font-weight:bold'>dark red block</span> blocking a ball is around: {{$magpie.measurements.light?(100-$magpie.measurements.light):50}}% </p>
+      <p>The chance of the <span style='color:rgba(255, 0, 0, 0.35);font-weight:bold'>light red block</span> blocking a ball is around: {{$magpie.measurements.light!==undefined?$magpie.measurements.light:50}}% </p>
+      <p>The chance of the <span style='color:rgba(255, 0, 0, 0.8);font-weight:bold'>dark red block</span> blocking a ball is around: {{$magpie.measurements.light!==undefined?(100-$magpie.measurements.light):50}}% </p>
       <SliderInput
         left='0%'        
         right='100%'
@@ -66,7 +66,7 @@
 
       <div v-if="
           (videoWatched) &&
-          $magpie.measurements.light
+          $magpie.measurements.light!==undefined
         ">
         <div v-if="(trial.condition=='video')&&showFeedback">
             <Wait :time="100" @done="genFeedback()" />

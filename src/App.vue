@@ -91,7 +91,7 @@
       You will not receive feedback after your choice in this section. 
       <br />
       <br />
-      Afer each choice, you will see a text box. If you like, you can freely write a better description that is not given in the options. 
+      After each choice, you will see a text box. If you like, you can freely write a better description that is not given in the options. 
       <strong>Writing anything in the textbox is entirely optional.</strong>
       <br />
       <br />
