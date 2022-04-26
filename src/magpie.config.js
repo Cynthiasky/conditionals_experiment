@@ -4,8 +4,7 @@ export default {
   serverUrl: 'https://mcmpact.ikw.uni-osnabrueck.de/magpie/',
   //socketUrl: 'wss://mcmpact.ikw.uni-osnabrueck.de/socket',
   // this will be used in prolific mode
-  completionUrl: 'https://app.prolific.co/submissions/complete?cc=3009C06D', //'https://...',
-  prolificURL:   'https://app.prolific.co/submissions/complete?cc=3009C06D', 
+  completionUrl: 'https://app.prolific.co/submissions/complete?cc=3AA4F97D', //'https://...',
   contactEmail: 't.li.17@student.rug.nl',
   // Either 'debug', 'directLink' or 'prolific'
   //mode: 'debug'
