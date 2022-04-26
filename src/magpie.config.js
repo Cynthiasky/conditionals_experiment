@@ -5,8 +5,9 @@ export default {
   //socketUrl: 'wss://mcmpact.ikw.uni-osnabrueck.de/socket',
   // this will be used in prolific mode
   completionUrl: 'https://app.prolific.co/submissions/complete?cc=3009C06D', //'https://...',
+  prolificURL:   'https://app.prolific.co/submissions/complete?cc=3009C06D', 
   contactEmail: 't.li.17@student.rug.nl',
   // Either 'debug', 'directLink' or 'prolific'
   //mode: 'debug'
-  mode: 'Prolific'
+  mode: 'prolific'
 };
