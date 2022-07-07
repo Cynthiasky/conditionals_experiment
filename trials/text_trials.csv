@@ -1,0 +1,5 @@
+experiment,condition,structure,context,expect_event,option1,option2,expect_ans
+text,if,disjunctive,Ahigh,A,"If <b>Ann</b> goes to the party, Cora will also goes to the party.","If <b>Bob</b> goes to the party, Cora will also goes to the party.","If <b>Ann</b> goes to the party, Cora will also goes to the party."
+text,if,disjunctive,Bhigh,B,"If <b>Ann</b> goes to the party, Cora will also goes to the party.","If <b>Bob</b> goes to the party, Cora will also goes to the party.","If <b>Bob</b> goes to the party, Cora will also goes to the party."
+text,if,conjunctive,Ahigh,B,"If <b>Ann</b> goes to the party, Cora will also goes to the party.","If <b>Bob</b> goes to the party, Cora will also goes to the party.","If <b>Bob</b> goes to the party, Cora will also goes to the party."
+text,if,conjunctive,Bhigh,A,"If <b>Ann</b> goes to the party, Cora will also goes to the party.","If <b>Bob</b> goes to the party, Cora will also goes to the party.","If <b>Ann</b> goes to the party, Cora will also goes to the party."

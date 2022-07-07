@@ -4,7 +4,7 @@
       Thank you for participating in this experiment! 
       <br />
       <br />
-      The experiment will take less than 10 minutes (including a practice session and the main experiment). You will see pictures or video clips of three billiard balls. 
+      The experiment will take less than 15 minutes (including a practice session and the main experiment). You will see pictures or video clips of three billiard balls. 
       Then you will be asked to answer some questions about the situation. 
       <br />
       <br />
@@ -122,6 +122,45 @@
         :progress="i/trialData.length"
       />
     </template>
+
+    <InstructionScreen :title="'Additional survey'">
+      Thank you for joining this experiment! 
+      <br />
+      <br />
+      We have two more brief questions for you. 
+      <strong>Your task is to read the situations carefully, then choose the sentence that better describes the situation.</strong> 
+      There might not be a correct answer.
+      Sometimes both sentences might be acceptable, sometimes neither.
+      Just choose the sentence that you think is intuitively a better description.
+      <br />
+      <br />
+      Press the button below to continue...
+    </InstructionScreen>
+    
+    <template v-for="(ttrial, ti) in textTrial">
+    <Screen>
+    <Slide>
+      <p text-align="center">There is a party. Ann, Bob and Cora are all invited.</p>
+      <div class="texts">
+      Cora doesn't like to go without backup by her friends Ann and Bob.
+      </br>Cora will only go to the party if <b>{{ttrial.structure=="conjunctive"?"both":"either"}} Ann {{ttrial.structure=="conjunctive"?"and":"or"}} Bob</b> go.
+      </br></br>It turns out that Ann is very <b>{{ttrial.context=="Ahigh"?"likely":"unlikely"}}</b> to go (independent of whoever else goes), 
+      but Bob is very <b>{{ttrial.context=="Bhigh"?"likely":"unlikely"}}</b> to go (independent of whoever else goes).
+      </br></br>John does not know any of this, except that Ann, Bob and Cora are all invited. 
+      John asks you: "<b>Will Cora come to the party?</b>"
+      </br></br>Which of the following sentences do you think is a better answer to John's question?</br></br>
+      </div>
+      <MultipleChoiceInput
+        :options="['If <b>Ann</b> goes to the party, Cora will also goes to the party.','If <b>Bob</b> goes to the party, Cora will also goes to the party.']"
+        :options-html="['If <b>Ann</b> goes to the party, Cora will also goes to the party.','If <b>Bob</b> goes to the party, Cora will also goes to the party.']"
+        :response.sync="$magpie.measurements.response"
+      />
+      <button v-if="$magpie.measurements.response" @click="$magpie.saveAndNextScreen();">Next</button>
+      <Record :data="{...ttrial, key:ti}" />
+    </Slide>
+    </Screen>
+    </template>
+
     <PostTestScreen />
     <!-- While developing your experiment, using the DebugResults screen is fine,
       once you're going live, you can use the <SubmitResults> screen to automatically send your experimental data to the server. -->
@@ -134,6 +173,7 @@
 // Load data from csv files as javascript arrays with objects
 import trialsAll from '../trials/training_trials.csv';
 import practiceData from '../trials/practice_trials.csv'
+import textData from '../trials/text_trials.csv'
 //import trainingProb from '../trials/training_prob_trials.csv'
 import _ from 'lodash'
 import MyMultipleChoiceScreen from './MyMultipleChoiceScreen';
@@ -207,7 +247,23 @@ var myConcat = function(d) {
   console.log("done");
   return new_all;
 };
+
+var genText = function(data) {
+    var t = _.chain(data)
+      .groupBy('structure')
+      .map(function(trials,structure) {
+        return _.sample(trials);
+      })
+      .flatten()
+      .value();
+    //console.log(t);
+    return _.shuffle(t);
+};
+
 var trialData = myConcat(trialsAll);
+var textTrial = genText(textData);
+
+//console.log(textTrial);
 
 export default {
   name: 'App',
@@ -219,12 +275,22 @@ export default {
     return {
       trialData: trialData,
       trialsAll: trialsAll,
-      practiceData: practiceData
+      practiceData: practiceData,
+      textData: textData,
+      textTrial: textTrial
     };
   },
   methods: {
     genTrials: genTrials,
-    myConcat: myConcat
+    myConcat: myConcat,
+    genText: genText
   }
 };
 </script>
+<style scoped>
+.texts {
+  width: 600px;
+  margin: 0 auto;
+  text-align: justify;
+}
+</style>
