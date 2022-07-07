@@ -401,11 +401,12 @@ function createArrow(w, h, x, y, linx, liny, type, userData, img){
     "static/images/longWall.png") //image
     
     //top-left wall 
+    //change gate size for conjunctive
     createBox(
     width = 0.1, //width
     height = 1, //height=1 
     x = 0.1,//x
-    y = 0, //y=1
+    y = (clip==1?1.2:0), //y=1
     b2Body.b2_staticBody, //what type of body
     "topLeftWall", //userdata 
     "static/images/shortWall.png") //image
@@ -415,7 +416,7 @@ function createArrow(w, h, x, y, linx, liny, type, userData, img){
     width = 0.1, //width
     height = 1, //height=1 
     x = 0.1,//x
-    y = 6, //y=5
+    y = (clip==1?4.8:6), //y=5
     b2Body.b2_staticBody, //what type of body
     "topLeftWall", //userdata 
     "static/images/shortWall.png") //image
