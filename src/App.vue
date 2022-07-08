@@ -234,7 +234,6 @@ var myConcat = function(d) {
     }
   }
   
- 
 
   var idx = [4, 9, 14, 19];
   for(var i = 0; i < idx.length; i++) {
@@ -244,7 +243,7 @@ var myConcat = function(d) {
   //console.log(_.filter(all,['condition','if']));
   //console.log(_.filter(new_all,['expect_event','A']).length);
   //console.log(_.filter(new_all,['expect_event','B']).length);
-  console.log("done");
+  //console.log("done");
   return new_all;
 };
 
@@ -260,10 +259,8 @@ var genText = function(data) {
     return _.shuffle(t);
 };
 
-var trialData = myConcat(trialsAll);
-var textTrial = genText(textData);
-
-//console.log(textTrial);
+var trialData;
+var textTrial;
 
 export default {
   name: 'App',
@@ -271,10 +268,14 @@ export default {
     MyMultipleChoiceScreen,
     ProbTraining
   },
+  created: function() {
+    trialData = myConcat(trialsAll);
+    textTrial = genText(textData);
+  },
   data() {
     return {
-      trialData: trialData,
       trialsAll: trialsAll,
+      trialData: trialData,
       practiceData: practiceData,
       textData: textData,
       textTrial: textTrial
