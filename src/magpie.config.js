@@ -8,6 +8,6 @@ export default {
   contactEmail: 't.li.17@student.rug.nl',
   // Either 'debug', 'directLink' or 'prolific'
   //mode: 'debug'
-  mode: 'directLink'
-  //mode: 'prolific'
+  //mode: 'directLink'
+  mode: 'prolific'
 };
