@@ -1,5 +1,8 @@
 <template>
   <Experiment title="conditionals">
+    <!--Screen>
+      <Wait :time="1000" @done="fetchData()" />
+    </Screen-->
     <InstructionScreen :title="'Welcome'">
       Thank you for participating in this experiment! 
       <br />
@@ -176,6 +179,7 @@ import practiceData from '../trials/practice_trials.csv'
 import textData from '../trials/text_trials.csv'
 //import trainingProb from '../trials/training_prob_trials.csv'
 import _ from 'lodash'
+import { nextTick } from 'vue'
 import MyMultipleChoiceScreen from './MyMultipleChoiceScreen';
 import ProbTraining from './ProbTraining';
 
@@ -186,6 +190,7 @@ var opt = {'if':_.template("If <span style='color:#3EA333;font-weight:bold'>Ball
 var genTrials = function(data, condition, size) {
  // for each condition, sample exp trials with size 
   var sample = _.chain(data)
+      //.filter(['condition',condition]) // test
       .groupBy('structure')
       .map(function(trials,struct) {
         return _.sampleSize(trials,size);
@@ -197,11 +202,11 @@ var genTrials = function(data, condition, size) {
     if(_.startsWith(t.structure,'common')) {
       t.option1 = opt[condition]({'block_gate': _.startsWith(t.pos,'Aright')?'block':'gate'});
       t.option2 = _.replace(opt[condition]({'block_gate': _.startsWith(t.pos,'Aright')?'gate':'block'}),"<span style='color:#3EA333;font-weight:bold'>Ball A</span>","<span style='color:#2662E0;font-weight:bold'>Ball B</span>");
-}
+    }
     else {
       t.option1 = opt[condition]({'block_gate': 'block'});
       t.option2 = _.replace(opt[condition]({'block_gate': 'block'}),"<span style='color:#3EA333;font-weight:bold'>Ball A</span>","<span style='color:#2662E0;font-weight:bold'>Ball B</span>");
-  }
+    }
     t.expect_ans = ((t.expect_event=='A')?t.option1:t.option2);
     //console.log(t.expect_event);
     t.condition = condition;
@@ -209,32 +214,54 @@ var genTrials = function(data, condition, size) {
   });
   //return _.shuffle(gen_opt);
   return gen_opt;
+  //return sample;
 };
 
 var myConcat = function(d) {
+  /*var a = _.chain(d)
+      .filter(['condition','if']) // test
+      .groupBy('structure')
+      .map(function(trials,struct) {
+        return _.sampleSize(trials,2);
+      })
+      .flatten()
+      .value();
+
+  var b = _.chain(d)
+      .filter(['condition','because']) // test
+      .groupBy('structure')
+      .map(function(trials,struct) {
+        return _.sampleSize(trials,2);
+      })
+      .flatten()
+      .value();*/
+  
   var copyd = _.cloneDeep(d);
   var a = genTrials(d,'if',2);
   var b = genTrials(copyd,'because',2);
 
   //var all =  _.shuffle(_.concat(a,b));
+  
   var all =  _.concat(a,b);
   var control = _.shuffle(_.remove(all,['structure','single']));
   //all = _.shuffle(all);
+  //console.log(all[19]);
 
   var new_all = [];
   //all = [];
   var struct_all = ['common_single','common_both','chain','disjunctive','conjunctive'];
   for(var i = 0; i < 4; i++) {
-  // shuffle cond_li every 4 ?
+  // shuffle cond_li every 4 
     struct_all = _.shuffle(struct_all);
     for(var j = 0; j < 5; j++) {
       var t = _.cloneDeep(_.sample(_.filter(all,['structure',struct_all[j]])));
       new_all.push(t);
-      _.pullAllWith(all,[t],_.isEqual);
+      _.pullAllWith(all,t,_.isEqual);
+      //console.log(all.length);
     }
+    //console.log(new_all);
   }
   
-
   var idx = [4, 9, 14, 19];
   for(var i = 0; i < idx.length; i++) {
     var t = idx[i];
@@ -243,7 +270,7 @@ var myConcat = function(d) {
   //console.log(_.filter(all,['condition','if']));
   //console.log(_.filter(new_all,['expect_event','A']).length);
   //console.log(_.filter(new_all,['expect_event','B']).length);
-  //console.log("done");
+  //console.log(new_all);
   return new_all;
 };
 
@@ -255,12 +282,16 @@ var genText = function(data) {
       })
       .flatten()
       .value();
-    //console.log(t);
     return _.shuffle(t);
 };
 
-var trialData;
-var textTrial;
+
+//var trialData;
+//var textTrial;
+
+var trialData = myConcat(trialsAll);
+var textTrial = genText(textData);
+
 
 export default {
   name: 'App',
@@ -268,23 +299,42 @@ export default {
     MyMultipleChoiceScreen,
     ProbTraining
   },
-  created: function() {
-    trialData = myConcat(trialsAll);
-    textTrial = genText(textData);
-  },
+  //created() {
+  //  this.fetchData();
+  //  this.textTrial = genText(this.textData);
+    //await this.$nextTick();
+  //},
   data() {
     return {
-      trialsAll: trialsAll,
+      trialsAll,
+      //trialData: myConcat(trialsAll),
       trialData: trialData,
-      practiceData: practiceData,
-      textData: textData,
-      textTrial: textTrial
+      practiceData,
+      textData,
+      textTrial: textTrial,
+      flag: false
+      //textTrial: genText(textData)
     };
   },
   methods: {
     genTrials: genTrials,
     myConcat: myConcat,
-    genText: genText
+    genText: genText,
+    /*async fetchData() {
+      const trialdata = await myConcat(this.trialsAll);
+      //setTimeout(() => {
+      //this.flag = true;
+      //}, 10000);
+      this.trialData = trialdata;
+    },*/
+    getOpt: function (t) {
+      //console.log(t);
+      //console.log(t.option1);
+      return [t.option1, t.option2];
+    }
+    //fetchData() {
+    //  this.trialData = myConcat(this.trialsAll);
+    //}
   }
 };
 </script>
