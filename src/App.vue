@@ -245,7 +245,7 @@ var myConcat = function(d) {
   var all =  _.concat(a,b);
   var control = _.shuffle(_.remove(all,['structure','single']));
   //all = _.shuffle(all);
-  //console.log(all[19]);
+  //console.log(all);
 
   var new_all = [];
   //all = [];
@@ -256,8 +256,14 @@ var myConcat = function(d) {
     for(var j = 0; j < 5; j++) {
       var t = _.cloneDeep(_.sample(_.filter(all,['structure',struct_all[j]])));
       new_all.push(t);
-      _.pullAllWith(all,t,_.isEqual);
+      _.pullAllWith(all,[t],_.isEqual);
+      //var drop = _.remove(all, function(obj) {
+      //  return (obj.structure == t.structure && obj.pos == t.pos && 
+      //  obj.condition == t.condition && obj.expect_event == t.expect_event);
+      //});
+      //console.log(drop);
       //console.log(all.length);
+      //console.log(new_all.length);
     }
     //console.log(new_all);
   }
@@ -267,8 +273,10 @@ var myConcat = function(d) {
     var t = idx[i];
     new_all = _.concat(_.slice(new_all,0,t), control[i], _.slice(new_all,t,new_all.length));
   }
-  //console.log(_.filter(all,['condition','if']));
-  //console.log(_.filter(new_all,['expect_event','A']).length);
+
+  //console.log(_.filter(new_all,['condition','if']));
+  //console.log(_.filter(new_all,['condition','because']));
+  //console.log(_.filter(new_all,['condition','A']).length);
   //console.log(_.filter(new_all,['expect_event','B']).length);
   //console.log(new_all);
   return new_all;

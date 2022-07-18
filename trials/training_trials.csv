@@ -8,8 +8,6 @@ main,if,common_both,false,true,320,Aright_Etop,0.8,0.2,A
 main,if,common_both,true,false,320,Aleft_Ebottom,0.2,0.8,B
 main,if,common_both,true,false,320,Aleft_Etop,0.2,0.8,B
 main,if,chain,false,false,320,Aright,0.8,0.8,B
-main,if,chain,false,false,320,Aright,0.8,0.8,B
-main,if,chain,false,false,320,Aleft,0.8,0.8,A
 main,if,chain,false,false,320,Aleft,0.8,0.8,A
 main,if,disjunctive,false,false,320,Atop,0.2,0.8,B
 main,if,disjunctive,false,false,320,Atop,0.8,0.2,A
