@@ -1,0 +1,353 @@
+---
+title: "exp1_analysis"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, message=FALSE, warning=FALSE}
+library("ggplot2")
+library("dplyr")
+library("patchwork")
+library("brms")
+library("lme4")
+library("tidyverse")
+library("tidybayes")
+library("scales")
+library("faintr")
+library("ggeffects")
+```
+
+# Preprocessing
+
+## minimal possible RTs for data exclusion (seperate if and because)
+
+```{r}
+min_rt <- read.csv(file="../data/min_rt.csv", header=TRUE,sep=",")
+min_rt <- min_rt[min_rt$experiment=='main',c('condition','pA','pB','pos','structure','response','expect_ans','responseTime')]
+```
+
+## visualize the distribution of RT
+```{r}
+
+
+mu <- min_rt %>% 
+  group_by(condition) %>% 
+  dplyr::summarize(Mean=mean(responseTime))
+#mu
+ggplot(min_rt, aes(x=responseTime/1000, fill=condition, color=condition)) +
+  geom_histogram(position="identity", alpha=0.5) +
+  scale_x_continuous(labels = label_number(),breaks=pretty_breaks(n=10)) +
+  geom_vline(data=mu, aes(xintercept=Mean/1000, color=condition),linetype="dashed",show.legend = FALSE) +
+  geom_text(data=mu,aes(x=Mean/1000+0.3,y=5,label=round(Mean/1000,digits=3)),show.legend = FALSE) +
+  labs(y="count", title = "Distribution of RTs (minimal)")
+```
+
+```{r}
+summary(min_rt[min_rt$condition=="if","responseTime"])
+summary(min_rt[min_rt$condition=="because","responseTime"])
+```
+
+## dataset exclude participants with technical issues
+```{r}
+data_all <- read.csv(file="../data/exp1_prolific_all.csv", header=TRUE,sep=",")
+data_all <- data_all[data_all$experiment=='main',c('submission_id','condition','pA','pB','pos','structure','response','expect_ans','responseTime')]
+data_all<-data_all[!(data_all$submission_id==3533 | data_all$submission_id==3532 | data_all$submission_id==3530 | data_all$submission_id==3521),]
+
+data_all <- data_all %>% mutate(submission_id = factor(submission_id),condition = factor(condition),structure = factor(structure))
+
+```
+```{r}
+#hist(data_all[data_all$condition=="if","responseTime"], breaks = 100)
+
+```
+
+```{r}
+
+mu <- data_all %>% 
+  group_by(condition) %>% 
+  dplyr::summarize(Mean=mean(responseTime))
+
+ggplot(data_all, aes(x=responseTime/1000, fill=condition, color=condition)) +
+  geom_histogram(position="identity", alpha=0.3) +
+  scale_x_continuous(labels = label_number(),breaks=pretty_breaks(n=50)) +
+  scale_y_continuous(breaks=pretty_breaks(n=30)) +
+  geom_vline(data=mu, aes(xintercept=Mean/1000, color=condition),linetype="dashed",show.legend = FALSE) +
+  geom_text(data=mu,aes(x=Mean/1000,y=c(300,280),label=round(Mean/1000,digits=3)),show.legend = FALSE) +
+  labs(y="count", title = "Distribution of RTs (all data)") +
+  theme(axis.text.x = element_text(angle = 90,vjust=1))
+```
+
+## exclude participants with minimal possible RTs (arbitary threshold)
+```{r}
+out_ind_if <- which(data_all$condition=="if" & data_all$responseTime < 2700)
+out_ind_bc <- which(data_all$condition=="because" & data_all$responseTime < 5000)
+
+rt_out <- data_all[union(out_ind_if,out_ind_bc),]
+rt_out[,c('submission_id','condition','structure','responseTime')] 
+#rt_out %>% filter(expect_ans != response)
+```
+```{r}
+final_out <- rt_out %>%
+  count(submission_id) %>%
+  filter(n>=2)
+final_out # only p3497 
+```
+# Visualization
+```{r}
+cond_disj_conj <- data_all %>% filter(condition=='if' & (structure=='disjunctive' | structure=='conjunctive'))  
+
+filler_disj_conj <- data_all %>% filter(condition=='because' & (structure=='disjunctive' | structure=='conjunctive')) 
+```
+
+## Percentage of match with expectations 
+
+| chain | common_both | common_single | conjunctive | disjunctive | single |
+|:---:|:---:|:---:|:---:|:---:|:---:|
+| the ball in the middle|the initially moving ball | the initially moving ball | the ball with a low possibility to pass | the ball with a high possibility to pass|the ball in the same row with E |
+
+The max for each column is 2 x num_participants
+```{r}
+total_count <- data_all %>% 
+  filter(!submission_id %in% final_out$submission_id) %>%
+  count(condition, structure, expect=(response==expect_ans)) 
+total_count
+```
+```{r}
+data_plot = data_all %>%  
+  filter(!submission_id %in% final_out$submission_id) %>% 
+  mutate(expect = ifelse((response==expect_ans), 1, 0))
+
+ggplot(data=data_plot,aes(x = structure, 
+                     y = mean(expect), fill=condition,
+                     group = condition)) +
+  labs(y="match%", title = "Percentage of match with expectations") +
+  geom_bar(position="dodge", stat="identity") 
+ 
+```
+```{r,out.height=100%,out.width=100%}
+total_count %>%
+  filter(expect == TRUE) %>%
+  ggplot(aes(x=structure, y=n/90, group=condition, fill=condition)) +
+  labs(y="match%", title = "Percentage of match with expectations") +
+  geom_bar(position="dodge2", stat="identity") 
+  
+  #geom_text(aes(label=round(n/90, digits = 3)),vjust=0,position = position_dodge(.9))
+```
+
+## individual 
+```{r}
+individual_count <- data_all %>%     
+  #filter(!submission_id %in% final_out$submission_id) %>%
+  count(submission_id, condition, structure) 
+individual_count
+```
+```{r}
+individual_count <- data_all %>%     
+  #filter(!submission_id %in% final_out$submission_id) %>%
+  count(submission_id, condition, structure, expect=(response==expect_ans)) 
+
+individual_count
+```
+```{r, fig.height = 5, fig.width = 10}
+individual_count %>%
+  filter(expect == TRUE) %>%
+  ggplot(aes(x=structure, y=n, fill=condition,group=condition)) + 
+  geom_bar(position="dodge", stat="identity") +
+  #facet_grid(~condition) +
+  geom_text(aes(label=n),vjust=0,position = position_dodge(.9)) +
+  facet_wrap(~submission_id,ncol=5) +
+  theme(axis.text.x = element_text(angle = 20)) 
+```
+
+## count normal event in disjunctive and conjunctive conditions
+
+```{r}
+count_disj_conj <- data_all %>% 
+  filter(structure=='disjunctive' | structure=='conjunctive') %>% 
+  filter(!submission_id %in% final_out$submission_id) %>%
+  count(condition, structure, normal = ifelse(structure == "disjunctive",response == expect_ans,response != expect_ans))
+
+count_disj_conj
+```
+```{r}
+count_disj_conj %>%
+  filter(normal==TRUE) %>%
+  ggplot(aes(x=structure, y=n/90, group=condition,fill=condition)) +
+  labs(y="normal%", title = "Percentage of normal choice") +
+  geom_bar(position="dodge", stat="identity") +
+  #stat_summary(fun.data = mean_cl_boot, geom = "errorbar",width = 0.2, size = 0.8, position = position_dodge(0.8)) +
+  geom_text(aes(label=round(n/90, digits = 3)),vjust=0,position = position_dodge(.9))
+
+```
+
+# brms after data exclusion
+
+## if trials (conditionals) disjunctive/conjunctive
+```{r}
+cond_brm_out <- brm(formula = normal ~ structure+(1|submission_id), data = cond_disj_conj %>% filter(!submission_id %in% final_out$submission_id) %>% mutate(normal = ifelse(structure == "disjunctive",response == expect_ans,response != expect_ans)), family = bernoulli)
+
+summary(cond_brm_out)
+```
+```{r}
+brms::hypothesis(cond_brm_out, "structuredisjunctive > 0")
+```
+
+## because trials (fillers) disjunctive/conjunctive
+```{r}
+filler_brm_out <- brm(formula = normal ~ structure+(1|submission_id), data = filler_disj_conj %>% filter(!submission_id %in% final_out$submission_id)%>% mutate(normal = ifelse(structure == "disjunctive",response == expect_ans,response != expect_ans)), family = bernoulli)
+```
+```{r}
+summary(filler_brm_out)
+```
+
+```{r}
+brms::hypothesis(filler_brm_out, "structuredisjunctive > 0")
+#brms::hypothesis(filler_brm_out, "Intercept < 0")
+```
+```{r}
+data_disj_conj <- data_all %>% filter(structure=='disjunctive' | structure=='conjunctive') %>% filter(!submission_id %in% final_out$submission_id)
+```
+
++ This is a test:  pointrange -> bar
+
+```{r}
+df.plot = data_disj_conj %>% mutate(normal = ifelse(structure == "disjunctive",response == expect_ans,response != expect_ans)) %>% mutate(normal = ifelse(normal == TRUE, 1, 0))
+
+exp_plot = ggplot(data = df.plot,
+       mapping = aes(x = condition, 
+                     y = normal,fill=structure,
+                     group = structure
+                     )) +
+  geom_hline(yintercept = 0.5, 
+             linetype = 2) + 
+  stat_summary(fun.y = "mean",
+               #geom = "pointrange",
+               geom="bar",
+               position = position_dodge2(width = 0.9),
+               size=0.1
+               #size = 1.5,shape=21
+               ) +
+  stat_summary(fun.data = "mean_cl_boot",
+               geom = "errorbar",
+               #geom="bar",
+               position = position_dodge(width=0.9),
+               width=0.2) +
+  labs(x = "type of condition",
+       y = "% normal cause selections" #, title = "Participants' selections"
+       ) +
+  scale_fill_brewer(palette = "Set1") +
+  scale_y_continuous(breaks = seq(0, 1, 0.25),
+                     labels = str_c(seq(0, 100, 25), "%"),
+                     expand = expansion(mult = c(0.05, 0))) +
+  coord_cartesian(clip = "off",
+                  ylim = c(0, 1)) + 
+  theme(text = element_text(size = 15),
+        legend.position = "bottom",
+        #panel.grid = element_blank(),
+        panel.background = element_blank(),
+        axis.title.x = element_blank(),
+        #plot.margin = margin(t = 1, l = 0.2, r = 0.2, unit = "cm"),
+        plot.title = element_text(vjust = 4,
+                                  color = "gray40",
+                                  hjust = 0.5)) +
+  theme(axis.line = element_line(color="black", size = 0.6))
+
+
+exp_plot
+```
+
+
+```{r}
+data_plot = data_all %>%  
+  filter(!submission_id %in% final_out$submission_id) %>% 
+  mutate(expect = ifelse((response==expect_ans), 1, 0))
+
+exp_plot2 = ggplot(data = data_plot,
+       mapping = aes(x = structure, 
+                     y=expect,
+                     fill=condition,
+                     group = condition
+                     )) +
+  geom_hline(yintercept = 0.5, 
+             linetype = 2) + 
+  #geom_bar(stat = "identity", position = position_dodge(width=0.3))+
+  stat_summary(fun.y = "mean",
+               geom="bar",position=position_dodge2(width=0.9)) +
+  stat_summary(fun.data = "mean_cl_boot",
+               #geom = "pointrange",
+               geom="errorbar",
+               position = position_dodge(width=0.9),
+               #size = 1.5,
+               width=0.2
+               ) +
+  labs(x = "type of structure",
+       y = "% match with expectations"#,title = "Participants' selections"
+       ) +
+  scale_fill_brewer(palette = "Set2") +
+  scale_y_continuous(breaks = seq(0, 1, 0.25),
+                     labels = str_c(seq(0, 100, 25), "%"),
+                     expand = expansion(mult = c(0.05, 0))) +
+  coord_cartesian(clip = "off",
+                  ylim = c(0, 1)) + 
+  theme(text = element_text(size = 15),
+        legend.position = "bottom",
+        #panel.grid = element_blank(),
+        panel.background = element_blank(),
+        axis.title.x = element_blank(),
+        axis.text.x = element_text(angle = 12),
+        plot.margin = margin(t = 1, l = 0.2, r = 0.2, unit = "cm"),
+        plot.title = element_text(vjust = 4,
+                                  color = "gray20",
+                                  hjust = 0.5)) +
+  theme(axis.line = element_line(color="black", size = 0.6))
+
+exp_plot2
+
+```
+
+```{r}
+all_brm_out <- brm(formula = normal~1+ structure*condition+(1+structure+condition|submission_id), data = data_disj_conj %>% mutate(normal = ifelse(structure == "disjunctive",response == expect_ans,response != expect_ans)), family = bernoulli)
+```
+```{r}
+summary(all_brm_out)
+```
+
+```{r}
+#brms::hypothesis(all_brm_out, "structuredisjunctive > 0")
+#get_cell_definitions(all_brm_out)
+draws_cond <- cbind(extract_cell_draws(all_brm_out, condition == 'if', colname = 'if'),
+                      extract_cell_draws(all_brm_out, condition == 'because', colname = 'because'))
+
+draws_cond %>% 
+  pivot_longer(cols = everything(), names_to = 'group', values_to = 'draws') %>% 
+  ggplot(aes(x = draws, color = group, fill = group)) +
+  geom_density(alpha = .4)
+```
+
+```{r}
+compare_groups(model = all_brm_out, 
+               higher = condition=='because' & structure=='disjunctive',
+               lower = condition=='because' & structure=='conjunctive')
+```
+
+
+```{r}
+compare_groups(model = all_brm_out, 
+               higher = condition=='if' & structure=='disjunctive',
+               lower = condition=='if' & structure=='conjunctive')
+```
+```{r}
+compare_groups(model = all_brm_out, 
+               higher = condition=='if' & structure=='disjunctive',
+               lower = condition=='because' & structure=='disjunctive')
+```
+```{r}
+pp_check(all_brm_out)
+#hypothesis(all_brm_out, "structuredisjunctive > 0")
+```
+```{r}
+get_cell_definitions(all_brm_out)
+```
